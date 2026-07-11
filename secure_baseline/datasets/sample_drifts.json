@@ -1,0 +1,302 @@
+[
+  {
+    "drift_id": "drift-evt-00004",
+    "type": "standalone",
+    "timestamp": "2026-05-16T06:43:00Z",
+    "control_id": "ACC-005",
+    "system": "IAM",
+    "domain": "identity",
+    "parameter": "service_account_creation",
+    "baseline_value": "approval_required",
+    "current_value": "self_service",
+    "changed_by": "autoscaler-staging",
+    "change_source": "ci_cd",
+    "approval_status": "pending",
+    "severity": "CRITICAL",
+    "compliance_mappings": {
+      "nist_800_53": "AC-2",
+      "cis_benchmark": "5.1",
+      "mitre_technique": "T1136",
+      "gdpr_article": "Article 25"
+    },
+    "narrative": "At 2026-05-16T06:43:00Z, service_account_creation on IAM was changed from approval_required to self_service by autoscaler-staging via a ci_cd change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to AC-2 (Account Management) and MITRE technique T1136 (Create Account), representing a CRITICAL severity finding.",
+    "remediation_steps": [
+      "Revoke or scope down the affected role/trust relationship immediately.",
+      "Review recent activity performed under the affected account or role.",
+      "Confirm the change had a valid approval; escalate if none exists."
+    ]
+  },
+  {
+    "drift_id": "drift-evt-00064",
+    "type": "standalone",
+    "timestamp": "2026-07-05T02:27:00Z",
+    "control_id": "ENC-001",
+    "system": "AWS RDS",
+    "domain": "encryption",
+    "parameter": "encryption_algorithm",
+    "baseline_value": "AES-256",
+    "current_value": "AES-128",
+    "changed_by": "ci-cd-pipeline-01",
+    "change_source": "ci_cd",
+    "approval_status": "not_required",
+    "severity": "HIGH",
+    "compliance_mappings": {
+      "nist_800_53": "SC-13",
+      "cis_benchmark": "3.11",
+      "mitre_technique": "T1600",
+      "gdpr_article": "Article 32"
+    },
+    "narrative": "At 2026-07-05T02:27:00Z, encryption_algorithm on AWS RDS was changed from AES-256 to AES-128 by ci-cd-pipeline-01 via a ci_cd change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to SC-13 (Cryptographic Protection) and MITRE technique T1600 (Weaken Encryption), representing a HIGH severity finding.",
+    "remediation_steps": [
+      "Roll the encryption setting back to the approved baseline.",
+      "Re-encrypt affected data under the correct algorithm if a downgrade window existed.",
+      "Confirm no data was written or transmitted while the weaker setting was active."
+    ]
+  },
+  {
+    "drift_id": "drift-evt-0001b",
+    "type": "standalone",
+    "timestamp": "2026-06-04T13:53:00Z",
+    "control_id": "EP-006",
+    "system": "Availability Monitor",
+    "domain": "endpoint",
+    "parameter": "heartbeat_interval",
+    "baseline_value": 60,
+    "current_value": 900,
+    "changed_by": "terraform-apply-bot",
+    "change_source": "iac",
+    "approval_status": "not_required",
+    "severity": "CRITICAL",
+    "compliance_mappings": {
+      "nist_800_53": "SI-4",
+      "cis_benchmark": "1.1",
+      "mitre_technique": "T1499",
+      "gdpr_article": "Article 32"
+    },
+    "narrative": "At 2026-06-04T13:53:00Z, heartbeat_interval on Availability Monitor was changed from 60 to 900 by terraform-apply-bot via a iac change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to SI-4 (System Monitoring) and MITRE technique T1499 (Endpoint Denial of Service), representing a CRITICAL severity finding.",
+    "remediation_steps": [
+      "Restart or reinstall the affected agent and confirm active heartbeat.",
+      "Check for a bulk pattern across other hosts to rule out a coordinated disable.",
+      "Cross-check patch/deployment logs for a conflicting update as the root cause."
+    ]
+  },
+  {
+    "drift_id": "drift-evt-0006b",
+    "type": "standalone",
+    "timestamp": "2026-05-20T15:06:00Z",
+    "control_id": "LOG-007",
+    "system": "SIEM",
+    "domain": "logging",
+    "parameter": "alert_review_frequency",
+    "baseline_value": "daily",
+    "current_value": "weekly",
+    "changed_by": "admin_019",
+    "change_source": "manual",
+    "approval_status": "pending",
+    "severity": "HIGH",
+    "compliance_mappings": {
+      "nist_800_53": "AU-6",
+      "cis_benchmark": "8.9",
+      "mitre_technique": "T1654",
+      "gdpr_article": "Article 32"
+    },
+    "narrative": "At 2026-05-20T15:06:00Z, alert_review_frequency on SIEM was changed from daily to weekly by admin_019 via a manual change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to AU-6 (Audit Record Review, Analysis, and Reporting) and MITRE technique T1654 (Log Enumeration), representing a HIGH severity finding.",
+    "remediation_steps": [
+      "Re-enable logging immediately and verify log delivery to the SIEM.",
+      "Audit the change history for this control to identify how long the gap lasted.",
+      "File an incident ticket if the gap exceeds the org's acceptable blind-spot window."
+    ]
+  },
+  {
+    "drift_id": "drift-evt-00053",
+    "type": "standalone",
+    "timestamp": "2026-04-17T09:28:00Z",
+    "control_id": "FW-006",
+    "system": "Admin Console",
+    "domain": "network",
+    "parameter": "external_exposure",
+    "baseline_value": false,
+    "current_value": true,
+    "changed_by": "terraform-apply-bot",
+    "change_source": "iac",
+    "approval_status": "pending",
+    "severity": "HIGH",
+    "compliance_mappings": {
+      "nist_800_53": "SC-7",
+      "cis_benchmark": "9.2",
+      "mitre_technique": "T1686",
+      "gdpr_article": "Article 32"
+    },
+    "narrative": "At 2026-04-17T09:28:00Z, external_exposure on Admin Console was changed from False to True by terraform-apply-bot via a iac change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to SC-7 (Boundary Protection) and MITRE technique T1686 (Disable or Modify System Firewall), representing a HIGH severity finding.",
+    "remediation_steps": [
+      "Close or scope the exposed port/rule to the minimum required source range.",
+      "Verify no unauthorized connections occurred while the rule was broadened.",
+      "Add the change to change-management if it is a legitimate but undocumented need."
+    ]
+  },
+  {
+    "drift_id": "drift-evt-0006d",
+    "type": "standalone",
+    "timestamp": "2026-06-17T23:31:00Z",
+    "control_id": "ACC-006",
+    "system": "IAM",
+    "domain": "identity",
+    "parameter": "account_deprovisioning",
+    "baseline_value": "within_24h",
+    "current_value": "not_removed",
+    "changed_by": "autoscaler-prod",
+    "change_source": "ci_cd",
+    "approval_status": "pending",
+    "severity": "HIGH",
+    "compliance_mappings": {
+      "nist_800_53": "AC-2",
+      "cis_benchmark": "5.2",
+      "mitre_technique": "T1531",
+      "gdpr_article": "Article 25"
+    },
+    "narrative": "At 2026-06-17T23:31:00Z, account_deprovisioning on IAM was changed from within_24h to not_removed by autoscaler-prod via a ci_cd change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to AC-2 (Account Management) and MITRE technique T1531 (Account Access Removal), representing a HIGH severity finding.",
+    "remediation_steps": [
+      "Revoke or scope down the affected role/trust relationship immediately.",
+      "Review recent activity performed under the affected account or role.",
+      "Confirm the change had a valid approval; escalate if none exists."
+    ]
+  },
+  {
+    "drift_id": "drift-evt-0005a",
+    "type": "standalone",
+    "timestamp": "2026-04-01T09:46:00Z",
+    "control_id": "ACC-003",
+    "system": "IAM",
+    "domain": "identity",
+    "parameter": "access_review_status",
+    "baseline_value": "reviewed_current",
+    "current_value": "never_reviewed",
+    "changed_by": "autoscaler-staging",
+    "change_source": "ci_cd",
+    "approval_status": "not_required",
+    "severity": "HIGH",
+    "compliance_mappings": {
+      "nist_800_53": "AC-3",
+      "cis_benchmark": "6.3",
+      "mitre_technique": "T1078",
+      "gdpr_article": "Article 25"
+    },
+    "narrative": "At 2026-04-01T09:46:00Z, access_review_status on IAM was changed from reviewed_current to never_reviewed by autoscaler-staging via a ci_cd change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to AC-3 (Access Enforcement) and MITRE technique T1078 (Valid Accounts), representing a HIGH severity finding.",
+    "remediation_steps": [
+      "Revoke or scope down the affected role/trust relationship immediately.",
+      "Review recent activity performed under the affected account or role.",
+      "Confirm the change had a valid approval; escalate if none exists."
+    ]
+  },
+  {
+    "drift_id": "drift-evt-00010",
+    "type": "standalone",
+    "timestamp": "2026-05-09T16:19:00Z",
+    "control_id": "EP-006",
+    "system": "Availability Monitor",
+    "domain": "endpoint",
+    "parameter": "heartbeat_interval",
+    "baseline_value": 60,
+    "current_value": 900,
+    "changed_by": "admin_009",
+    "change_source": "manual",
+    "approval_status": "not_required",
+    "severity": "CRITICAL",
+    "compliance_mappings": {
+      "nist_800_53": "SI-4",
+      "cis_benchmark": "1.1",
+      "mitre_technique": "T1499",
+      "gdpr_article": "Article 32"
+    },
+    "narrative": "At 2026-05-09T16:19:00Z, heartbeat_interval on Availability Monitor was changed from 60 to 900 by admin_009 via a manual change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to SI-4 (System Monitoring) and MITRE technique T1499 (Endpoint Denial of Service), representing a CRITICAL severity finding.",
+    "remediation_steps": [
+      "Restart or reinstall the affected agent and confirm active heartbeat.",
+      "Check for a bulk pattern across other hosts to rule out a coordinated disable.",
+      "Cross-check patch/deployment logs for a conflicting update as the root cause."
+    ]
+  },
+  {
+    "drift_id": "compound-incident-0001",
+    "type": "compound_cross_domain",
+    "window_start": "2026-04-08T02:47:00Z",
+    "window_end": "2026-04-08T03:22:00Z",
+    "same_actor": true,
+    "changed_by": "admin_007",
+    "member_drifts": [
+      {
+        "drift_id": "compound-evt-log-001",
+        "timestamp": "2026-04-08T02:47:00Z",
+        "control_id": "LOG-001",
+        "system": "AWS CloudTrail",
+        "domain": "logging",
+        "parameter": "cloudtrail_enabled",
+        "baseline_value": true,
+        "current_value": false,
+        "changed_by": "admin_007",
+        "change_source": "manual",
+        "approval_status": "pending",
+        "severity": "CRITICAL",
+        "compliance_mappings": {
+          "nist_800_53": "AU-2",
+          "cis_benchmark": "8.2",
+          "mitre_technique": "T1685.002",
+          "gdpr_article": "Article 32"
+        }
+      },
+      {
+        "drift_id": "compound-evt-fw-006",
+        "timestamp": "2026-04-08T03:02:00Z",
+        "control_id": "FW-006",
+        "system": "Admin Console",
+        "domain": "network",
+        "parameter": "external_exposure",
+        "baseline_value": false,
+        "current_value": true,
+        "changed_by": "admin_007",
+        "change_source": "manual",
+        "approval_status": "pending",
+        "severity": "CRITICAL",
+        "compliance_mappings": {
+          "nist_800_53": "SC-7",
+          "cis_benchmark": "9.2",
+          "mitre_technique": "T1686",
+          "gdpr_article": "Article 32"
+        }
+      },
+      {
+        "drift_id": "compound-evt-enc-001",
+        "timestamp": "2026-04-08T03:22:00Z",
+        "control_id": "ENC-001",
+        "system": "AWS RDS",
+        "domain": "encryption",
+        "parameter": "encryption_algorithm",
+        "baseline_value": "AES-256",
+        "current_value": "AES-128",
+        "changed_by": "admin_007",
+        "change_source": "manual",
+        "approval_status": "pending",
+        "severity": "HIGH",
+        "compliance_mappings": {
+          "nist_800_53": "SC-13",
+          "cis_benchmark": "3.11",
+          "mitre_technique": "T1600",
+          "gdpr_article": "Article 32"
+        }
+      }
+    ],
+    "severity": "CRITICAL",
+    "blast_radius": "EC2 -> IAM role -> S3 bucket (payment records) -- reachable once logging, the admin console, and encryption are all weakened simultaneously",
+    "mitre_chain": [
+      "T1685.002",
+      "T1686",
+      "T1600"
+    ],
+    "narrative": "Between 2026-04-08T02:47:00Z and 2026-04-08T03:22:00Z, three controls were weakened by the same actor (admin_007): CloudTrail logging was disabled, an admin console was externally exposed, and database encryption was downgraded from AES-256 to AES-128. Individually these might be routine changes; together they open a path from the exposed console to encrypted payment data with no audit trail. This aligns with MITRE techniques T1685.002, T1686, T1600 and represents a PCI-DSS and GDPR Article 32 compliance failure.",
+    "remediation_sequence": [
+      "1. Re-enable CloudTrail logging first to restore audit visibility before touching anything else.",
+      "2. Close external exposure on the admin console to cut off the active access path.",
+      "3. Roll encryption back to AES-256 and verify no data was written under the weaker cipher.",
+      "4. Review all actions taken by the responsible actor during the 35-minute window."
+    ]
+  }
+]
