@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "generated_by": "SentinelDNA Multi-Domain Event Simulator",
   "description": "Raw change events across AWS/Azure/GCP/Firewall/IAM/Endpoint/CI-CD. Contains one scripted CRITICAL attack storyline (Case 1), one MEDIUM contractor misconfiguration, and routine noise for trust/behavioral modeling.",
-  "event_count": 58,
+  "event_count": 61,
   "events": [
     {
       "event_id": "E0011",
@@ -1439,6 +1439,82 @@
       "resource_id": "crowdstrike/policy/prod-fleet",
       "maintenance_window_active": true,
       "rule_engine_severity": "INFO"
+    },
+    {
+      "event_id": "E0060",
+      "timestamp": "2026-04-05T09:15:00Z",
+      "provider": "AWS",
+      "service": "VPC",
+      "control_id": "CTRL-AWS-007",
+      "universal_category": "NETWORK_TRAFFIC_VISIBILITY",
+      "action": "DeleteFlowLogs",
+      "field_changed": "flow_logs_enabled",
+      "old_value": true,
+      "new_value": false,
+      "actor": {
+        "id": "contractor-009",
+        "name": "D. Vasquez",
+        "type": "human",
+        "role": "Network Contractor",
+        "trust_score_at_event": 0.61
+      },
+      "source_ip": "10.0.45.88",
+      "region": "us-east-1",
+      "resource_id": "vpc-0f3c9e21-prod",
+      "maintenance_window_active": true,
+      "rule_engine_severity": "HIGH",
+      "notes": "VPC flow logs disabled during network migration. Covered by maintenance window MW-006."
+    },
+    {
+      "event_id": "E0061",
+      "timestamp": "2026-04-05T11:32:00Z",
+      "provider": "Azure",
+      "service": "Diagnostic Logs",
+      "control_id": "CTRL-AZ-001",
+      "universal_category": "AUDIT_LOGGING",
+      "action": "UpdateDiagnosticSetting",
+      "field_changed": "enabled",
+      "old_value": true,
+      "new_value": false,
+      "actor": {
+        "id": "contractor-009",
+        "name": "D. Vasquez",
+        "type": "human",
+        "role": "Network Contractor",
+        "trust_score_at_event": 0.59
+      },
+      "source_ip": "10.0.45.88",
+      "region": "eastus",
+      "resource_id": "/subscriptions/az-sub-4471/diagnosticSettings/org-activity-export",
+      "maintenance_window_active": false,
+      "rule_engine_severity": "CRITICAL",
+      "mitre_technique": "T1562.008",
+      "notes": "Azure Activity Log diagnostic setting disabled outside any maintenance window."
+    },
+    {
+      "event_id": "E0062",
+      "timestamp": "2026-04-05T14:48:00Z",
+      "provider": "pfSense",
+      "service": "Firewall",
+      "control_id": "CTRL-FW-002",
+      "universal_category": "NETWORK_PERIMETER_CONTROL",
+      "action": "UpdateEgressPolicy",
+      "field_changed": "approved_destinations_only",
+      "old_value": true,
+      "new_value": false,
+      "actor": {
+        "id": "contractor-009",
+        "name": "D. Vasquez",
+        "type": "human",
+        "role": "Network Contractor",
+        "trust_score_at_event": 0.55
+      },
+      "source_ip": "10.0.45.88",
+      "region": "global",
+      "resource_id": "fw-edge-02/rule-base/outbound",
+      "maintenance_window_active": true,
+      "rule_engine_severity": "HIGH",
+      "notes": "Egress filtering relaxed during migration. Contractor action, covered by maintenance window."
     }
   ]
 }

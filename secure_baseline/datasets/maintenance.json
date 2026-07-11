@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "generated_by": "SentinelDNA TTL Contract Simulator",
   "description": "Temporary-change (TTL) contracts: start/expiry/owner/approver per control. Includes clean closures, one active long-running window, and two deliberately invalid windows (unapproved, expired-unreverted, retroactive) to exercise Stage 2 TTL escalation logic.",
-  "window_count": 8,
+  "window_count": 9,
   "windows": [
     {
       "maintenance_id": "MW-1001",
@@ -101,6 +101,18 @@
       "reason": "Extended flow-log destination migration to new CloudWatch group",
       "status": "active",
       "ticket_ref": "JIRA-SEC-4210"
+    },
+    {
+      "maintenance_id": "MW-1009",
+      "control_id": "CTRL-FW-002",
+      "resource_id": "fw-edge-02/rule-base/outbound",
+      "requested_by": "contractor-009",
+      "approved_by": "eng-041",
+      "start_time": "2026-04-05T13:00:00Z",
+      "expiry_time": "2026-04-05T16:00:00Z",
+      "reason": "Approved egress filtering relaxation during migration",
+      "status": "closed",
+      "ticket_ref": "JIRA-SEC-4250"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "generated_by": "SentinelDNA Detection Engine (Member A) - pipeline.py",
   "description": "Validated drift events produced by the Detection Engine. Consumed by Member B's Intelligence Engine and served via GET /drifts.",
-  "drift_count": 12,
+  "drift_count": 15,
   "drifts": [
     {
       "drift_id": "drift-evt-00001",
@@ -429,6 +429,113 @@
       "source_event_id": "E0042",
       "resource_id": "fw-edge-01/rule-base/inbound",
       "actor_trust_score": 0.96
+    },
+    {
+      "drift_id": "drift-evt-00013",
+      "type": "standalone",
+      "timestamp": "2026-04-05T09:15:00Z",
+      "control_id": "CTRL-AWS-007",
+      "system": "VPC",
+      "domain": "network",
+      "parameter": "flow_logs_enabled",
+      "baseline_value": true,
+      "current_value": false,
+      "changed_by": "contractor-009",
+      "change_source": "human",
+      "approval_status": "approved",
+      "status": "Fail",
+      "severity": "HIGH",
+      "drift_score": 8.2,
+      "suppressed": false,
+      "suppression_reason": "Covered by approved maintenance window MW-1008 (ticket JIRA-SEC-4210)",
+      "compliance_mappings": {
+        "nist_800_53": "AU-2",
+        "nist_800_53_title": "Event Logging",
+        "cis_benchmark": "CIS-AWS-2.9",
+        "mitre_technique": "T1562.008",
+        "mitre_technique_name": "Disable or Modify Cloud Logs",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-04-05T09:15:00Z, flow_logs_enabled on VPC (AWS) was changed from True to False by D. Vasquez (human) via DeleteFlowLogs, within an approved maintenance window. This aligns with MITRE ATT&CK technique T1562.008 (Disable or Modify Cloud Logs). Maps to NIST 800-53 AU-2. Classified as HIGH severity (pattern: LOGGING_DISABLED, score: 8.2).",
+      "remediation_steps": [
+        "Re-enable the logging control immediately and verify continuous delivery to the log store.",
+        "Review the gap window for any activity that occurred while logging was off.",
+        "Confirm whether a valid change ticket/maintenance window covered this action; escalate if none exists."
+      ],
+      "source_event_id": "E0060",
+      "resource_id": "vpc-0f3c9e21-prod",
+      "actor_trust_score": 0.61
+    },
+    {
+      "drift_id": "drift-evt-00014",
+      "type": "standalone",
+      "timestamp": "2026-04-05T11:32:00Z",
+      "control_id": "CTRL-AZ-001",
+      "system": "Diagnostic Logs",
+      "domain": "logging",
+      "parameter": "enabled",
+      "baseline_value": true,
+      "current_value": false,
+      "changed_by": "contractor-009",
+      "change_source": "human",
+      "approval_status": "none",
+      "status": "Fail",
+      "severity": "CRITICAL",
+      "drift_score": 15.0,
+      "suppressed": false,
+      "suppression_reason": null,
+      "compliance_mappings": {
+        "nist_800_53": "AU-2",
+        "nist_800_53_title": "Event Logging",
+        "cis_benchmark": "CIS-AZURE-5.1.1",
+        "mitre_technique": "T1562.008",
+        "mitre_technique_name": "Disable or Modify Cloud Logs",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-04-05T11:32:00Z, enabled on Diagnostic Logs (Azure) was changed from True to False by D. Vasquez (human) via UpdateDiagnosticSetting, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1562.008 (Disable or Modify Cloud Logs). Maps to NIST 800-53 AU-2. Classified as CRITICAL severity (pattern: LOGGING_DISABLED, score: 15.0).",
+      "remediation_steps": [
+        "Re-enable the logging control immediately and verify continuous delivery to the log store.",
+        "Review the gap window for any activity that occurred while logging was off.",
+        "Confirm whether a valid change ticket/maintenance window covered this action; escalate if none exists."
+      ],
+      "source_event_id": "E0061",
+      "resource_id": "/subscriptions/az-sub-4471/diagnosticSettings/org-activity-export",
+      "actor_trust_score": 0.59
+    },
+    {
+      "drift_id": "drift-evt-00015",
+      "type": "standalone",
+      "timestamp": "2026-04-05T14:48:00Z",
+      "control_id": "CTRL-FW-002",
+      "system": "Firewall",
+      "domain": "network",
+      "parameter": "approved_destinations_only",
+      "baseline_value": true,
+      "current_value": false,
+      "changed_by": "contractor-009",
+      "change_source": "human",
+      "approval_status": "approved",
+      "status": "Fail",
+      "severity": "INFO",
+      "drift_score": 0,
+      "suppressed": true,
+      "suppression_reason": "Covered by approved maintenance window MW-1009 (ticket JIRA-SEC-4250)",
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "NIST-800-53-SC-7",
+        "mitre_technique": "T1041",
+        "mitre_technique_name": "Exfiltration Over C2 Channel",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-04-05T14:48:00Z, approved_destinations_only on Firewall (pfSense) was changed from True to False by D. Vasquez (human) via UpdateEgressPolicy, within an approved maintenance window. This aligns with MITRE ATT&CK technique T1041 (Exfiltration Over C2 Channel). Maps to NIST 800-53 SC-7. Classified as INFO severity (pattern: UNKNOWN_PATTERN, score: 0). Suppressed as likely benign based on contextual signals: Covered by approved maintenance window MW-1009 (ticket JIRA-SEC-4250).",
+      "remediation_steps": [
+        "Manually review this change \u2014 it does not match a known drift pattern.",
+        "Consider adding a new rule to the Rule Engine if this recurs."
+      ],
+      "source_event_id": "E0062",
+      "resource_id": "fw-edge-02/rule-base/outbound",
+      "actor_trust_score": 0.55
     }
   ]
 }

@@ -2,94 +2,173 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
- 
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
- 
+
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Optional
- 
+from typing import Optional, List, Dict, Any
+
+from shared.schemas import load_drifts, load_baseline, load_events, load_maintenance_windows
+from shared import constants
+
+# Member A imports
 from detection_engine.pipeline import run_pipeline
- 
+
+# Member B imports
+from trust import trust_engine
+from ttl import ttl_engine
+from attack_graph import graph_builder
+from tribunal import ai_tribunal
+from intelligence_engine import counterfactual_engine, deep_forensics
+
 DATASETS_DIR = Path(__file__).resolve().parent.parent.parent / "datasets"
 SAMPLE_DRIFTS_PATH = DATASETS_DIR / "sample_drifts.json"
- 
+
 app = FastAPI(
-    title="SentinelDNA Detection Engine API",
-    description="Member A's Detection Engine: baseline, drift, and compliance endpoints.",
+    title="SentinelDNA API",
+    description="Unified API exposing Detection Engine (Member A) and Intelligence Engine (Member B) endpoints.",
     version="1.0.0",
 )
- 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # tighten for real deployment
     allow_methods=["*"],
     allow_headers=["*"],
 )
- 
- 
-def _load_drifts() -> dict:
+
+
+def _safe_load_drifts() -> List[Dict[str, Any]]:
     if not SAMPLE_DRIFTS_PATH.exists():
         raise HTTPException(status_code=503, detail="sample_drifts.json not generated yet. POST /pipeline/run first.")
-    with open(SAMPLE_DRIFTS_PATH) as f:
-        return json.load(f)
- 
- 
+    return load_drifts()
+
+
+# =====================================================================
+# SYSTEM ENDPOINTS
+# =====================================================================
+
 @app.get("/health")
 def health():
-    return {"status": "ok", "service": "detection-engine"}
- 
- 
+    return {"status": "ok", "service": "sentineldna-unified-api"}
+
+
+@app.post("/pipeline/run")
+def trigger_pipeline_run():
+    """Re-runs the full Detection Engine pipeline and regenerates sample_drifts.json."""
+    summary = run_pipeline(datasets_dir=str(DATASETS_DIR), output_path=str(SAMPLE_DRIFTS_PATH))
+    return {"status": "completed", "detection_summary": summary}
+
+
+@app.post("/intelligence/run")
+def trigger_intelligence_run():
+    """Runs the full Intelligence Engine pipeline and returns aggregated verdicts and forensics."""
+    # 1. Trust
+    trust_map = trust_engine.run()
+    # 2. Forensics
+    anomalies = deep_forensics.run()
+    forensic_map = {a.event_id: a for a in anomalies}
+    # 3. Tribunal
+    verdicts = ai_tribunal.run(trust_map=trust_map, forensic_map=forensic_map)
+    # 4. Counterfactuals
+    counterfactuals = counterfactual_engine.run()
+    # 5. TTL Findings
+    ttl_findings = ttl_engine.run()
+
+    return {
+        "status": "completed",
+        "verdicts": verdicts,
+        "forensic_anomalies_count": len(anomalies),
+        "counterfactuals_count": len(counterfactuals),
+        "ttl_violations_count": len(ttl_findings)
+    }
+
+
+# =====================================================================
+# DETECTION ENGINE ENDPOINTS (Member A)
+# =====================================================================
+
 @app.get("/drifts")
 def get_drifts(
     severity: Optional[str] = Query(None, description="Filter by CRITICAL/HIGH/MEDIUM/LOW/INFO"),
     control_id: Optional[str] = Query(None),
     suppressed: Optional[bool] = Query(None, description="Filter suppressed vs active findings"),
 ):
-    """
-    Primary hand-off endpoint for Member B's Intelligence Engine
-    (trust engine, attack graph, tribunal, remediation simulator all read from here).
-    """
-    data = _load_drifts()
-    results = data["drifts"]
- 
+    """Primary hand-off endpoint: fetches detected drift events."""
+    results = _safe_load_drifts()
+
     if severity:
-        results = [d for d in results if d["severity"].upper() == severity.upper()]
+        results = [d for d in results if d.get("severity", "").upper() == severity.upper()]
     if control_id:
-        results = [d for d in results if d["control_id"] == control_id]
+        results = [d for d in results if d.get("control_id") == control_id]
     if suppressed is not None:
-        results = [d for d in results if d["suppressed"] == suppressed]
- 
+        results = [d for d in results if d.get("suppressed") == suppressed]
+
     return {"drift_count": len(results), "drifts": results}
- 
- 
+
+
 @app.get("/drifts/{drift_id}")
 def get_drift_by_id(drift_id: str):
-    data = _load_drifts()
-    for d in data["drifts"]:
-        if d["drift_id"] == drift_id:
+    drifts = _safe_load_drifts()
+    for d in drifts:
+        if d.get("drift_id") == drift_id:
             return d
     raise HTTPException(status_code=404, detail=f"Drift {drift_id} not found")
- 
- 
+
+
 @app.get("/controls")
 def get_controls():
-    with open(DATASETS_DIR / "baseline.json") as f:
-        return json.load(f)
- 
- 
+    return load_baseline()
+
+
 @app.get("/controls/{control_id}")
 def get_control_by_id(control_id: str):
-    with open(DATASETS_DIR / "baseline.json") as f:
-        controls = json.load(f)["controls"]
+    controls = load_baseline()
     for c in controls:
-        if c["control_id"] == control_id:
+        if c.get("control_id") == control_id:
             return c
     raise HTTPException(status_code=404, detail=f"Control {control_id} not found")
- 
- 
-@app.post("/pipeline/run")
-def trigger_pipeline_run():
-    """Re-runs the full Detection Engine pipeline and regenerates sample_drifts.json."""
-    summary = run_pipeline(datasets_dir=str(DATASETS_DIR), output_path=str(SAMPLE_DRIFTS_PATH))
-    return {"status": "completed", "summary": summary}
+
+
+# =====================================================================
+# INTELLIGENCE ENGINE ENDPOINTS (Member B)
+# =====================================================================
+
+@app.get("/intelligence/trust")
+def get_actor_trust():
+    """Returns actor trust scores based on behavioral history."""
+    return trust_engine.run()
+
+
+@app.get("/intelligence/ttl")
+def get_ttl_findings():
+    """Returns maintenance window expiration and approval violations."""
+    return ttl_engine.run()
+
+
+@app.get("/intelligence/attack-graph")
+def get_attack_graph():
+    """Returns the full nodes and edges of the attack graph."""
+    return graph_builder.run()
+
+
+@app.get("/intelligence/forensics")
+def get_deep_forensics():
+    """Returns Isolation Forest and Change-Point anomaly scores for all events."""
+    return deep_forensics.run()
+
+
+@app.get("/intelligence/tribunal")
+def get_tribunal_verdicts():
+    """Returns AI Tribunal final decisions (ALLOW, ESCALATE, BLOCK) for drifts."""
+    trust_map = trust_engine.run()
+    anomalies = deep_forensics.run()
+    forensic_map = {a.event_id: a for a in anomalies}
+    return ai_tribunal.run(trust_map=trust_map, forensic_map=forensic_map)
+
+
+@app.get("/intelligence/counterfactual")
+def get_counterfactual_analysis():
+    """Returns blast-radius risk reduction metrics for prioritizing remediation."""
+    return counterfactual_engine.run()

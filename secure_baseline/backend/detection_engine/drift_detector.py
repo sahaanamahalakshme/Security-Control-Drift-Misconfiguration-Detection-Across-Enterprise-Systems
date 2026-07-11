@@ -11,7 +11,7 @@ from rules.suppression import compute_suppression
 from shared.constants import (
     ENVIRONMENT_CRITICALITY, CRITICALITY_TO_ENV_PROXY, SCORE_SEVERITY_BANDS
 )
-from shared.schemas import DriftStatus
+from shared.enums import DriftStatus
 
 
 def _score_to_severity(score: float) -> str:
@@ -60,14 +60,29 @@ class DriftDetectionEngine:
         env_proxy = CRITICALITY_TO_ENV_PROXY.get(control.get("criticality", "MEDIUM"), "staging")
         env_multiplier = ENVIRONMENT_CRITICALITY[env_proxy]
 
-        raw_score = (rule_weight * env_multiplier) - suppression["discount"]
+        # --- Suppression discount scaling ---
+        # CRITICAL severity: approval reduces risk but never eliminates it.
+        # "What if a malicious actor creates an approved change ticket?"
+        # Answer: "Approval reduces risk but never eliminates critical drift."
+        effective_discount = suppression["discount"]
+        if base_severity == "CRITICAL" and effective_discount > 0:
+            effective_discount = round(effective_discount * 0.3, 2)
+
+        raw_score = (rule_weight * env_multiplier) - effective_discount
         raw_score = max(raw_score, 0)
         final_severity = _score_to_severity(raw_score)
 
         # A pattern that strengthens a control (or Pass status) is never a
         # risk finding, regardless of score noise.
         is_drift_finding = status != DriftStatus.PASS.value and pattern != "CONTROL_STRENGTHENED"
-        suppressed = is_drift_finding and raw_score <= 1 and suppression["discount"] > 0
+
+        # Suppression logic: suppress if score drops below threshold OR if
+        # a valid discount >= 3 exists (approved maintenance) — but NEVER
+        # suppress CRITICAL severity findings.
+        suppressed = is_drift_finding and (
+            (raw_score <= 1 and effective_discount > 0)
+            or (suppression["discount"] >= 3 and base_severity != "CRITICAL")
+        )
 
         return {
             "event": event,
