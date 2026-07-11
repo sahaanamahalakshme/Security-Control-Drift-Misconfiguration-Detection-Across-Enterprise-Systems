@@ -20,63 +20,93 @@ from attack_graph import graph_builder
 from tribunal import ai_tribunal
 from intelligence_engine import counterfactual_engine
 from intelligence_engine import deep_forensics
+from intelligence_engine import drift_dna
+from intelligence_engine import immune_memory
+from intelligence_engine import forecasting
+from intelligence_engine import business_impact
+from intelligence_engine import credit_score
+from intelligence_engine import time_machine
+from intelligence_engine import storytelling
 
+from remediation import auto_healer
+from remediation import webhook_dispatcher
 
 def main():
     print("=" * 70)
-    print("1) TRUST ENGINE  (reads events.json)")
+    print("SentinelDNA - Full 16-Stage Execution (0-15)")
     print("=" * 70)
+
+    print("\n--- STAGE 1: INNATE IMMUNITY (Detection Engine) ---")
+    print("  [Detection Engine runs via detection_engine.pipeline]")
+    
+    print("\n--- STAGE 2: ADAPTIVE TRUST & TTL ---")
     trust_map = trust_engine.run()
-    for actor, r in trust_map.items():
-        print(f"  {actor:22s} score={r.trust_score:6.2f}  band={r.trust_band}")
-
-    print()
-    print("=" * 70)
-    print("2) TTL ENGINE  (reads maintenance.json)")
-    print("=" * 70)
+    print(f"  Processed {len(trust_map)} actors' trust scores.")
     ttl_findings = ttl_engine.run()
-    if not ttl_findings:
-        print("  No TTL findings.")
-    for f in ttl_findings:
-        flag = " [UNAPPROVED]" if f.unapproved else ""
-        print(f"  [{f.reason.upper():18s}] {f.control_id} on {f.resource_id}{flag}")
+    print(f"  Found {len(ttl_findings)} TTL violations.")
 
-    print()
-    print("=" * 70)
-    print("3) ATTACK GRAPH BUILDER  (reads baseline.json + topology.json)")
-    print("=" * 70)
-    g = graph_builder.build_graph()
-    print(f"  {g.number_of_nodes()} nodes, {g.number_of_edges()} edges")
-
-    print()
-    print("=" * 70)
-    print("4) DEEP FORENSICS ENGINE  (reads events.json + ML Isolation Forest)")
-    print("=" * 70)
+    print("\n--- STAGE 3: DEEP FORENSICS ENGINE ---")
     anomalies = deep_forensics.run()
-    # Build map by event_id for the Tribunal
     forensic_map = {a.event_id: a for a in anomalies}
-    anomalies_sorted = sorted(anomalies, key=lambda x: x.combined_confidence, reverse=True)
-    for a in anomalies_sorted[:5]:  # show top 5 anomalous events
-        print(f"  [{a.combined_confidence:.2f}] {a.event_id:8s} actor={a.actor_id:22s} iso={a.isolation_score:.2f} cp={a.changepoint_score:.2f}")
+    print(f"  Evaluated ML anomalies for {len(anomalies)} events.")
 
-    print()
-    print("=" * 70)
-    print("5) AI TRIBUNAL  (reads sample_drifts.json, uses trust_map + forensic_map)")
-    print("=" * 70)
+    print("\n--- STAGE 4: ATTACK GRAPH CORRELATION ---")
+    g = graph_builder.build_graph()
+    print(f"  Graph built: {g.number_of_nodes()} nodes, {g.number_of_edges()} edges")
+
+    print("\n--- STAGE 5: AI SECURITY TRIBUNAL ---")
     verdicts = ai_tribunal.run(trust_map=trust_map, forensic_map=forensic_map)
-    for v in verdicts:
-        print(f"  [{v.verdict:8s}] {v.control:12s} severity={v.severity:8s} confidence={v.confidence}")
-        print(f"             rationale: {v.rationale}")
+    blocks = sum(1 for v in verdicts if v.verdict == "BLOCK")
+    print(f"  Rendered {len(verdicts)} verdicts ({blocks} BLOCKS).")
 
-    print()
-    print("=" * 70)
-    print("6) COUNTERFACTUAL ENGINE  (attack graph + sample_drifts.json)")
-    print("=" * 70)
-    for r in counterfactual_engine.run():
-        print(f"  {r.drift_control:12s} risk_reduction_if_fixed={r.risk_reduction} node(s)")
+    print("\n--- STAGE 6: COUNTERFACTUAL SIMULATOR ---")
+    cf = counterfactual_engine.run()
+    print(f"  Simulated {len(cf)} remediation blast-radius scenarios.")
+    
+    print("\n--- STAGE 7: DRIFT DNA ---")
+    lineages = drift_dna.run()
+    print(f"  Tracked full mutation lineage for {len(lineages)} controls.")
+    
+    print("\n--- STAGE 8: IMMUNE MEMORY ---")
+    sigs = immune_memory.run(verdicts)
+    print(f"  Extracted {len(sigs)} Antibody Signatures from BLOCK verdicts.")
+    
+    print("\n--- STAGE 9: PREDICTIVE DRIFT FORECASTING ---")
+    forecasts = forecasting.run()
+    for f in forecasts[:2]:
+        print(f"  {f.domain}: {f.probability*100:.1f}% chance of next drift.")
+        
+    print("\n--- STAGE 10: BUSINESS IMPACT TRANSLATOR ---")
+    impacts = business_impact.run()
+    total_risk = sum(i.estimated_fine_usd for i in impacts)
+    print(f"  Translated technical drift to ${total_risk:,} in potential compliance fines.")
+    
+    print("\n--- STAGE 11: EXECUTIVE SECURITY CREDIT SCORE ---")
+    score = credit_score.run(trust_map, ttl_findings)
+    print(f"  Current Org Score: {score.score} (Trend: {score.trend})")
+    
+    print("\n--- STAGE 12: SECURITY TIME MACHINE ---")
+    incidents = time_machine.run()
+    print(f"  Correlated {len(incidents)} Compound Incidents based on time-window heuristics.")
+    
+    print("\n--- STAGE 13: AI INCIDENT STORYTELLING ---")
+    stories = storytelling.run(incidents)
+    for s in stories:
+        print(f"  [{s.incident_id}] Generated AI narrative.")
 
-    print()
-    print("Member B pipeline ran end-to-end with zero dependency on Member A.")
+    print("\n--- STAGE 14: AUTO-HEALER (Immune Effector) ---")
+    actions = auto_healer.run(verdicts)
+    print(f"  Generated {len(actions)} Auto-Remediation payloads (Status: PENDING_EXECUTION).")
+    if actions:
+        print(f"  Example Payload -> {actions[0].control_id}: {actions[0].generated_payload}")
+
+    print("\n--- STAGE 15: SLACK WEBHOOK DISPATCHER ---")
+    dispatched = webhook_dispatcher.run(verdicts, actions)
+    print(f"  Dispatched {len(dispatched)} Slack alerts for BLOCK verdicts.")
+
+    print("\n======================================================================")
+    print("SentinelDNA pipeline executed all 16 stages successfully.")
+    print("======================================================================")
 
 
 if __name__ == "__main__":

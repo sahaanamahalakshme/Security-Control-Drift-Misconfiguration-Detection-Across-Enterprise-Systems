@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,6 +22,9 @@ from ttl import ttl_engine
 from attack_graph import graph_builder
 from tribunal import ai_tribunal
 from intelligence_engine import counterfactual_engine, deep_forensics
+from intelligence_engine import drift_dna, immune_memory, forecasting
+from intelligence_engine import business_impact, credit_score, time_machine, storytelling
+from remediation import auto_healer, webhook_dispatcher
 
 DATASETS_DIR = Path(__file__).resolve().parent.parent.parent / "datasets"
 SAMPLE_DRIFTS_PATH = DATASETS_DIR / "sample_drifts.json"
@@ -172,3 +176,88 @@ def get_tribunal_verdicts():
 def get_counterfactual_analysis():
     """Returns blast-radius risk reduction metrics for prioritizing remediation."""
     return counterfactual_engine.run()
+
+
+@app.get("/intelligence/drift-dna")
+def get_drift_dna():
+    """Returns drift lineage (Stage 7)."""
+    return drift_dna.run()
+
+
+@app.get("/intelligence/immune-memory")
+def get_immune_memory():
+    """Returns antibody signatures extracted from recent blocks (Stage 8)."""
+    trust_map = trust_engine.run()
+    anomalies = deep_forensics.run()
+    forensic_map = {a.event_id: a for a in anomalies}
+    verdicts = ai_tribunal.run(trust_map=trust_map, forensic_map=forensic_map)
+    return immune_memory.run(verdicts)
+
+
+@app.get("/intelligence/forecasting")
+def get_forecasting():
+    """Returns predictive drift likelihood by domain (Stage 9)."""
+    return forecasting.run()
+
+
+@app.get("/intelligence/business-impact")
+def get_business_impact():
+    """Returns estimated fines and business risk mappings (Stage 10)."""
+    return business_impact.run()
+
+
+@app.get("/intelligence/credit-score")
+def get_credit_score():
+    """Returns executive security credit score (Stage 11)."""
+    trust_map = trust_engine.run()
+    ttl_findings = ttl_engine.run()
+    return credit_score.run(trust_map, ttl_findings)
+
+
+@app.get("/intelligence/time-machine")
+def get_time_machine():
+    """Returns compound incidents correlated across time (Stage 12)."""
+    return time_machine.run()
+
+
+@app.get("/intelligence/storytelling")
+def get_incident_stories():
+    """Returns AI-generated incident narratives (Stage 13)."""
+    return storytelling.run()
+
+
+@app.get("/remediation/auto-heal")
+def get_auto_heal_actions():
+    """Returns pending Auto-Remediation actions generated from BLOCKED verdicts (Stage 14)."""
+    trust_map = trust_engine.run()
+    anomalies = deep_forensics.run()
+    forensic_map = {a.event_id: a for a in anomalies}
+    verdicts = ai_tribunal.run(trust_map=trust_map, forensic_map=forensic_map)
+    return auto_healer.run(verdicts)
+
+
+@app.get("/remediation/webhook-status")
+def get_webhook_status():
+    """Shows which controls had Slack alerts dispatched in the last run (Stage 15)."""
+    trust_map = trust_engine.run()
+    anomalies = deep_forensics.run()
+    forensic_map = {a.event_id: a for a in anomalies}
+    verdicts = ai_tribunal.run(trust_map=trust_map, forensic_map=forensic_map)
+    actions = auto_healer.run(verdicts)
+    dispatched = webhook_dispatcher.run(verdicts, actions)
+    return {"total_dispatched": len(dispatched), "alerts": [{"control": d["control"]} for d in dispatched]}
+
+
+@app.get("/remediation/webhook-payload/{control_id}")
+def get_webhook_payload(control_id: str):
+    """Returns the full Slack Block Kit payload for a specific control (for dashboard preview)."""
+    trust_map = trust_engine.run()
+    anomalies = deep_forensics.run()
+    forensic_map = {a.event_id: a for a in anomalies}
+    verdicts = ai_tribunal.run(trust_map=trust_map, forensic_map=forensic_map)
+    actions = auto_healer.run(verdicts)
+    dispatched = webhook_dispatcher.run(verdicts, actions)
+    for d in dispatched:
+        if d["control"] == control_id:
+            return d["payload"]
+    raise HTTPException(status_code=404, detail=f"No BLOCK verdict found for control '{control_id}'")

@@ -279,18 +279,93 @@ class CounterfactualResult:
 
 @dataclass
 class ForensicAnomaly:
-    """Output from the Deep Forensics Engine (Stage 3).
-    Combines Isolation Forest anomaly detection with statistical
-    change-point detection for behavioral shift identification.
-    """
+    """Output from the Deep Forensics Engine (Stage 3)."""
     anomaly_id: str
     event_id: str
     control_id: str
     actor_id: str
-    isolation_score: float      # 0.0 (normal) to 1.0 (highly anomalous)
-    changepoint_score: float    # 0.0 (no shift) to 1.0 (major behavioral shift)
-    combined_confidence: float  # weighted consensus of both scores
+    isolation_score: float
+    changepoint_score: float
+    combined_confidence: float
     reasons: List[str] = field(default_factory=list)
+
+
+@dataclass
+class DriftLineage:
+    """Output from Drift DNA (Stage 7). Tracks a control's mutation history."""
+    control_id: str
+    mutations: List[Dict[str, Any]]  # Sequential list of changes
+
+
+@dataclass
+class AntibodySignature:
+    """Output from Immune Memory (Stage 8). A fingerprint of known malicious behavior."""
+    signature_id: str
+    actor_type: str
+    control_domain: str
+    action_type: str
+    mitre_technique: Optional[str]
+    confidence_weight: float
+
+
+@dataclass
+class DriftForecast:
+    """Output from Predictive Drift Forecasting (Stage 9)."""
+    domain: str
+    probability: float
+    predicted_volume: int
+    velocity_trend: str  # "accelerating", "stable", "decelerating"
+
+
+@dataclass
+class BusinessImpact:
+    """Output from Business Impact Translator (Stage 10)."""
+    drift_id: str
+    compliance_frameworks_at_risk: List[str]
+    estimated_fine_usd: int
+    revenue_risk: str
+    brand_damage: str
+    narrative: str
+
+
+@dataclass
+class SecurityCreditScore:
+    """Output from Executive Security Credit Score (Stage 11)."""
+    score: int          # 300 - 850
+    trend: int          # e.g., -15 or +5
+    top_negative_factors: List[str]
+
+
+@dataclass
+class CompoundIncident:
+    """Output from Security Time Machine (Stage 12). Groups drifts."""
+    incident_id: str
+    drifts: List[str]       # list of drift_ids
+    primary_actor: str
+    start_time: datetime
+    end_time: datetime
+    severity: str
+    mitre_techniques: List[str]
+
+
+@dataclass
+class IncidentNarrative:
+    """Output from AI Incident Storytelling (Stage 13)."""
+    incident_id: str
+    story: str
+    remediation_order: List[str]
+
+
+@dataclass
+class RemediationAction:
+    """Output from Auto-Healer (Stage 14)."""
+    action_id: str
+    drift_id: str
+    control_id: str
+    domain: str
+    rollback_value: Any
+    generated_payload: str
+    status: str = "PENDING_EXECUTION"
 
 
 # ---------------------------------------------------------------------------
