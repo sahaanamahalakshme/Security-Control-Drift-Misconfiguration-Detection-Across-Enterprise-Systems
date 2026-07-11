@@ -1,302 +1,434 @@
-[
-  {
-    "drift_id": "drift-evt-00004",
-    "type": "standalone",
-    "timestamp": "2026-05-16T06:43:00Z",
-    "control_id": "ACC-005",
-    "system": "IAM",
-    "domain": "identity",
-    "parameter": "service_account_creation",
-    "baseline_value": "approval_required",
-    "current_value": "self_service",
-    "changed_by": "autoscaler-staging",
-    "change_source": "ci_cd",
-    "approval_status": "pending",
-    "severity": "CRITICAL",
-    "compliance_mappings": {
-      "nist_800_53": "AC-2",
-      "cis_benchmark": "5.1",
-      "mitre_technique": "T1136",
-      "gdpr_article": "Article 25"
-    },
-    "narrative": "At 2026-05-16T06:43:00Z, service_account_creation on IAM was changed from approval_required to self_service by autoscaler-staging via a ci_cd change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to AC-2 (Account Management) and MITRE technique T1136 (Create Account), representing a CRITICAL severity finding.",
-    "remediation_steps": [
-      "Revoke or scope down the affected role/trust relationship immediately.",
-      "Review recent activity performed under the affected account or role.",
-      "Confirm the change had a valid approval; escalate if none exists."
-    ]
-  },
-  {
-    "drift_id": "drift-evt-00064",
-    "type": "standalone",
-    "timestamp": "2026-07-05T02:27:00Z",
-    "control_id": "ENC-001",
-    "system": "AWS RDS",
-    "domain": "encryption",
-    "parameter": "encryption_algorithm",
-    "baseline_value": "AES-256",
-    "current_value": "AES-128",
-    "changed_by": "ci-cd-pipeline-01",
-    "change_source": "ci_cd",
-    "approval_status": "not_required",
-    "severity": "HIGH",
-    "compliance_mappings": {
-      "nist_800_53": "SC-13",
-      "cis_benchmark": "3.11",
-      "mitre_technique": "T1600",
-      "gdpr_article": "Article 32"
-    },
-    "narrative": "At 2026-07-05T02:27:00Z, encryption_algorithm on AWS RDS was changed from AES-256 to AES-128 by ci-cd-pipeline-01 via a ci_cd change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to SC-13 (Cryptographic Protection) and MITRE technique T1600 (Weaken Encryption), representing a HIGH severity finding.",
-    "remediation_steps": [
-      "Roll the encryption setting back to the approved baseline.",
-      "Re-encrypt affected data under the correct algorithm if a downgrade window existed.",
-      "Confirm no data was written or transmitted while the weaker setting was active."
-    ]
-  },
-  {
-    "drift_id": "drift-evt-0001b",
-    "type": "standalone",
-    "timestamp": "2026-06-04T13:53:00Z",
-    "control_id": "EP-006",
-    "system": "Availability Monitor",
-    "domain": "endpoint",
-    "parameter": "heartbeat_interval",
-    "baseline_value": 60,
-    "current_value": 900,
-    "changed_by": "terraform-apply-bot",
-    "change_source": "iac",
-    "approval_status": "not_required",
-    "severity": "CRITICAL",
-    "compliance_mappings": {
-      "nist_800_53": "SI-4",
-      "cis_benchmark": "1.1",
-      "mitre_technique": "T1499",
-      "gdpr_article": "Article 32"
-    },
-    "narrative": "At 2026-06-04T13:53:00Z, heartbeat_interval on Availability Monitor was changed from 60 to 900 by terraform-apply-bot via a iac change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to SI-4 (System Monitoring) and MITRE technique T1499 (Endpoint Denial of Service), representing a CRITICAL severity finding.",
-    "remediation_steps": [
-      "Restart or reinstall the affected agent and confirm active heartbeat.",
-      "Check for a bulk pattern across other hosts to rule out a coordinated disable.",
-      "Cross-check patch/deployment logs for a conflicting update as the root cause."
-    ]
-  },
-  {
-    "drift_id": "drift-evt-0006b",
-    "type": "standalone",
-    "timestamp": "2026-05-20T15:06:00Z",
-    "control_id": "LOG-007",
-    "system": "SIEM",
-    "domain": "logging",
-    "parameter": "alert_review_frequency",
-    "baseline_value": "daily",
-    "current_value": "weekly",
-    "changed_by": "admin_019",
-    "change_source": "manual",
-    "approval_status": "pending",
-    "severity": "HIGH",
-    "compliance_mappings": {
-      "nist_800_53": "AU-6",
-      "cis_benchmark": "8.9",
-      "mitre_technique": "T1654",
-      "gdpr_article": "Article 32"
-    },
-    "narrative": "At 2026-05-20T15:06:00Z, alert_review_frequency on SIEM was changed from daily to weekly by admin_019 via a manual change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to AU-6 (Audit Record Review, Analysis, and Reporting) and MITRE technique T1654 (Log Enumeration), representing a HIGH severity finding.",
-    "remediation_steps": [
-      "Re-enable logging immediately and verify log delivery to the SIEM.",
-      "Audit the change history for this control to identify how long the gap lasted.",
-      "File an incident ticket if the gap exceeds the org's acceptable blind-spot window."
-    ]
-  },
-  {
-    "drift_id": "drift-evt-00053",
-    "type": "standalone",
-    "timestamp": "2026-04-17T09:28:00Z",
-    "control_id": "FW-006",
-    "system": "Admin Console",
-    "domain": "network",
-    "parameter": "external_exposure",
-    "baseline_value": false,
-    "current_value": true,
-    "changed_by": "terraform-apply-bot",
-    "change_source": "iac",
-    "approval_status": "pending",
-    "severity": "HIGH",
-    "compliance_mappings": {
-      "nist_800_53": "SC-7",
-      "cis_benchmark": "9.2",
-      "mitre_technique": "T1686",
-      "gdpr_article": "Article 32"
-    },
-    "narrative": "At 2026-04-17T09:28:00Z, external_exposure on Admin Console was changed from False to True by terraform-apply-bot via a iac change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to SC-7 (Boundary Protection) and MITRE technique T1686 (Disable or Modify System Firewall), representing a HIGH severity finding.",
-    "remediation_steps": [
-      "Close or scope the exposed port/rule to the minimum required source range.",
-      "Verify no unauthorized connections occurred while the rule was broadened.",
-      "Add the change to change-management if it is a legitimate but undocumented need."
-    ]
-  },
-  {
-    "drift_id": "drift-evt-0006d",
-    "type": "standalone",
-    "timestamp": "2026-06-17T23:31:00Z",
-    "control_id": "ACC-006",
-    "system": "IAM",
-    "domain": "identity",
-    "parameter": "account_deprovisioning",
-    "baseline_value": "within_24h",
-    "current_value": "not_removed",
-    "changed_by": "autoscaler-prod",
-    "change_source": "ci_cd",
-    "approval_status": "pending",
-    "severity": "HIGH",
-    "compliance_mappings": {
-      "nist_800_53": "AC-2",
-      "cis_benchmark": "5.2",
-      "mitre_technique": "T1531",
-      "gdpr_article": "Article 25"
-    },
-    "narrative": "At 2026-06-17T23:31:00Z, account_deprovisioning on IAM was changed from within_24h to not_removed by autoscaler-prod via a ci_cd change. Approval status was 'pending' and the change occurred outside an approved maintenance window. This maps to AC-2 (Account Management) and MITRE technique T1531 (Account Access Removal), representing a HIGH severity finding.",
-    "remediation_steps": [
-      "Revoke or scope down the affected role/trust relationship immediately.",
-      "Review recent activity performed under the affected account or role.",
-      "Confirm the change had a valid approval; escalate if none exists."
-    ]
-  },
-  {
-    "drift_id": "drift-evt-0005a",
-    "type": "standalone",
-    "timestamp": "2026-04-01T09:46:00Z",
-    "control_id": "ACC-003",
-    "system": "IAM",
-    "domain": "identity",
-    "parameter": "access_review_status",
-    "baseline_value": "reviewed_current",
-    "current_value": "never_reviewed",
-    "changed_by": "autoscaler-staging",
-    "change_source": "ci_cd",
-    "approval_status": "not_required",
-    "severity": "HIGH",
-    "compliance_mappings": {
-      "nist_800_53": "AC-3",
-      "cis_benchmark": "6.3",
-      "mitre_technique": "T1078",
-      "gdpr_article": "Article 25"
-    },
-    "narrative": "At 2026-04-01T09:46:00Z, access_review_status on IAM was changed from reviewed_current to never_reviewed by autoscaler-staging via a ci_cd change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to AC-3 (Access Enforcement) and MITRE technique T1078 (Valid Accounts), representing a HIGH severity finding.",
-    "remediation_steps": [
-      "Revoke or scope down the affected role/trust relationship immediately.",
-      "Review recent activity performed under the affected account or role.",
-      "Confirm the change had a valid approval; escalate if none exists."
-    ]
-  },
-  {
-    "drift_id": "drift-evt-00010",
-    "type": "standalone",
-    "timestamp": "2026-05-09T16:19:00Z",
-    "control_id": "EP-006",
-    "system": "Availability Monitor",
-    "domain": "endpoint",
-    "parameter": "heartbeat_interval",
-    "baseline_value": 60,
-    "current_value": 900,
-    "changed_by": "admin_009",
-    "change_source": "manual",
-    "approval_status": "not_required",
-    "severity": "CRITICAL",
-    "compliance_mappings": {
-      "nist_800_53": "SI-4",
-      "cis_benchmark": "1.1",
-      "mitre_technique": "T1499",
-      "gdpr_article": "Article 32"
-    },
-    "narrative": "At 2026-05-09T16:19:00Z, heartbeat_interval on Availability Monitor was changed from 60 to 900 by admin_009 via a manual change. Approval status was 'not_required' and the change occurred outside an approved maintenance window. This maps to SI-4 (System Monitoring) and MITRE technique T1499 (Endpoint Denial of Service), representing a CRITICAL severity finding.",
-    "remediation_steps": [
-      "Restart or reinstall the affected agent and confirm active heartbeat.",
-      "Check for a bulk pattern across other hosts to rule out a coordinated disable.",
-      "Cross-check patch/deployment logs for a conflicting update as the root cause."
-    ]
-  },
-  {
-    "drift_id": "compound-incident-0001",
-    "type": "compound_cross_domain",
-    "window_start": "2026-04-08T02:47:00Z",
-    "window_end": "2026-04-08T03:22:00Z",
-    "same_actor": true,
-    "changed_by": "admin_007",
-    "member_drifts": [
-      {
-        "drift_id": "compound-evt-log-001",
-        "timestamp": "2026-04-08T02:47:00Z",
-        "control_id": "LOG-001",
-        "system": "AWS CloudTrail",
-        "domain": "logging",
-        "parameter": "cloudtrail_enabled",
-        "baseline_value": true,
-        "current_value": false,
-        "changed_by": "admin_007",
-        "change_source": "manual",
-        "approval_status": "pending",
-        "severity": "CRITICAL",
-        "compliance_mappings": {
-          "nist_800_53": "AU-2",
-          "cis_benchmark": "8.2",
-          "mitre_technique": "T1685.002",
-          "gdpr_article": "Article 32"
-        }
+{
+  "schema_version": "1.0",
+  "generated_by": "SentinelDNA Detection Engine (Member A) - pipeline.py",
+  "description": "Validated drift events produced by the Detection Engine. Consumed by Member B's Intelligence Engine and served via GET /drifts.",
+  "drift_count": 12,
+  "drifts": [
+    {
+      "drift_id": "drift-evt-00001",
+      "type": "standalone",
+      "timestamp": "2026-03-12T00:00:00Z",
+      "control_id": "CTRL-FW-001",
+      "system": "Firewall",
+      "domain": "network",
+      "parameter": "port_443_allow_scoped",
+      "baseline_value": null,
+      "current_value": true,
+      "changed_by": "eng-027",
+      "change_source": "human",
+      "approval_status": "pending",
+      "status": "Degraded",
+      "severity": "MEDIUM",
+      "drift_score": 4.5,
+      "suppressed": false,
+      "suppression_reason": "Event flagged maintenance_window_active=True but no valid, approved maintenance window was found \u2014 treated as unsuppressed.",
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "NIST-800-53-SC-7",
+        "mitre_technique": "T1190",
+        "mitre_technique_name": "Exploit Public-Facing Application",
+        "gdpr_article": "Article 32"
       },
-      {
-        "drift_id": "compound-evt-fw-006",
-        "timestamp": "2026-04-08T03:02:00Z",
-        "control_id": "FW-006",
-        "system": "Admin Console",
-        "domain": "network",
-        "parameter": "external_exposure",
-        "baseline_value": false,
-        "current_value": true,
-        "changed_by": "admin_007",
-        "change_source": "manual",
-        "approval_status": "pending",
-        "severity": "CRITICAL",
-        "compliance_mappings": {
-          "nist_800_53": "SC-7",
-          "cis_benchmark": "9.2",
-          "mitre_technique": "T1686",
-          "gdpr_article": "Article 32"
-        }
+      "narrative": "At 2026-03-12T00:00:00Z, port_443_allow_scoped on Firewall (PaloAlto) was changed from False to True by A. Fernandes (human) via AddRule, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1190 (Exploit Public-Facing Application). Maps to NIST 800-53 SC-7. Classified as MEDIUM severity (pattern: UNKNOWN_PATTERN, score: 4.5).",
+      "remediation_steps": [
+        "Manually review this change \u2014 it does not match a known drift pattern.",
+        "Consider adding a new rule to the Rule Engine if this recurs."
+      ],
+      "source_event_id": "E0029",
+      "resource_id": "fw-edge-01/rule-base/inbound",
+      "actor_trust_score": 0.98
+    },
+    {
+      "drift_id": "drift-evt-00002",
+      "type": "standalone",
+      "timestamp": "2026-03-12T21:29:00Z",
+      "control_id": "CTRL-FW-001",
+      "system": "Firewall",
+      "domain": "network",
+      "parameter": "port_443_allow_scoped",
+      "baseline_value": null,
+      "current_value": true,
+      "changed_by": "eng-027",
+      "change_source": "human",
+      "approval_status": "pending",
+      "status": "Degraded",
+      "severity": "MEDIUM",
+      "drift_score": 4.5,
+      "suppressed": false,
+      "suppression_reason": "Event flagged maintenance_window_active=True but no valid, approved maintenance window was found \u2014 treated as unsuppressed.",
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "NIST-800-53-SC-7",
+        "mitre_technique": "T1190",
+        "mitre_technique_name": "Exploit Public-Facing Application",
+        "gdpr_article": "Article 32"
       },
-      {
-        "drift_id": "compound-evt-enc-001",
-        "timestamp": "2026-04-08T03:22:00Z",
-        "control_id": "ENC-001",
-        "system": "AWS RDS",
-        "domain": "encryption",
-        "parameter": "encryption_algorithm",
-        "baseline_value": "AES-256",
-        "current_value": "AES-128",
-        "changed_by": "admin_007",
-        "change_source": "manual",
-        "approval_status": "pending",
-        "severity": "HIGH",
-        "compliance_mappings": {
-          "nist_800_53": "SC-13",
-          "cis_benchmark": "3.11",
-          "mitre_technique": "T1600",
-          "gdpr_article": "Article 32"
-        }
-      }
-    ],
-    "severity": "CRITICAL",
-    "blast_radius": "EC2 -> IAM role -> S3 bucket (payment records) -- reachable once logging, the admin console, and encryption are all weakened simultaneously",
-    "mitre_chain": [
-      "T1685.002",
-      "T1686",
-      "T1600"
-    ],
-    "narrative": "Between 2026-04-08T02:47:00Z and 2026-04-08T03:22:00Z, three controls were weakened by the same actor (admin_007): CloudTrail logging was disabled, an admin console was externally exposed, and database encryption was downgraded from AES-256 to AES-128. Individually these might be routine changes; together they open a path from the exposed console to encrypted payment data with no audit trail. This aligns with MITRE techniques T1685.002, T1686, T1600 and represents a PCI-DSS and GDPR Article 32 compliance failure.",
-    "remediation_sequence": [
-      "1. Re-enable CloudTrail logging first to restore audit visibility before touching anything else.",
-      "2. Close external exposure on the admin console to cut off the active access path.",
-      "3. Roll encryption back to AES-256 and verify no data was written under the weaker cipher.",
-      "4. Review all actions taken by the responsible actor during the 35-minute window."
-    ]
-  }
-]
+      "narrative": "At 2026-03-12T21:29:00Z, port_443_allow_scoped on Firewall (PaloAlto) was changed from False to True by A. Fernandes (human) via AddRule, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1190 (Exploit Public-Facing Application). Maps to NIST 800-53 SC-7. Classified as MEDIUM severity (pattern: UNKNOWN_PATTERN, score: 4.5).",
+      "remediation_steps": [
+        "Manually review this change \u2014 it does not match a known drift pattern.",
+        "Consider adding a new rule to the Rule Engine if this recurs."
+      ],
+      "source_event_id": "E0044",
+      "resource_id": "fw-edge-01/rule-base/inbound",
+      "actor_trust_score": 0.93
+    },
+    {
+      "drift_id": "drift-evt-00003",
+      "type": "standalone",
+      "timestamp": "2026-03-14T02:47:11Z",
+      "control_id": "CTRL-AWS-001",
+      "system": "CloudTrail",
+      "domain": "logging",
+      "parameter": "enabled",
+      "baseline_value": true,
+      "current_value": false,
+      "changed_by": "eng-014",
+      "change_source": "human",
+      "approval_status": "none",
+      "status": "Fail",
+      "severity": "CRITICAL",
+      "drift_score": 15.0,
+      "suppressed": false,
+      "suppression_reason": null,
+      "compliance_mappings": {
+        "nist_800_53": "AU-2",
+        "nist_800_53_title": "Event Logging",
+        "cis_benchmark": "CIS-AWS-3.1",
+        "mitre_technique": "T1562.008",
+        "mitre_technique_name": "Disable or Modify Cloud Logs",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-14T02:47:11Z, enabled on CloudTrail (AWS) was changed from True to False by R. Menon (human) via UpdateTrail, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1562.008 (Disable or Modify Cloud Logs). Maps to NIST 800-53 AU-2. Classified as CRITICAL severity (pattern: LOGGING_DISABLED, score: 15.0).",
+      "remediation_steps": [
+        "Re-enable the logging control immediately and verify continuous delivery to the log store.",
+        "Review the gap window for any activity that occurred while logging was off.",
+        "Confirm whether a valid change ticket/maintenance window covered this action; escalate if none exists."
+      ],
+      "source_event_id": "E0001",
+      "resource_id": "arn:aws:cloudtrail:us-east-1:184920331:trail/org-main-trail",
+      "actor_trust_score": 0.58
+    },
+    {
+      "drift_id": "drift-evt-00004",
+      "type": "standalone",
+      "timestamp": "2026-03-14T03:12:47Z",
+      "control_id": "CTRL-AWS-003",
+      "system": "EC2-SecurityGroup",
+      "domain": "network",
+      "parameter": "port_8080_open_to_world",
+      "baseline_value": false,
+      "current_value": true,
+      "changed_by": "eng-014",
+      "change_source": "human",
+      "approval_status": "none",
+      "status": "Fail",
+      "severity": "MEDIUM",
+      "drift_score": 7.5,
+      "suppressed": false,
+      "suppression_reason": null,
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "CIS-AWS-5.2",
+        "mitre_technique": "T1190",
+        "mitre_technique_name": "Exploit Public-Facing Application",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-14T03:12:47Z, port_8080_open_to_world on EC2-SecurityGroup (AWS) was changed from False to True by R. Menon (human) via AuthorizeSecurityGroupIngress, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1190 (Exploit Public-Facing Application). Maps to NIST 800-53 SC-7. Classified as MEDIUM severity (pattern: FIREWALL_RULE_BROADENED, score: 7.5).",
+      "remediation_steps": [
+        "Revert the firewall/security-group rule to its baseline scope.",
+        "Check external exposure (e.g. scan the opened port) to confirm no active exploitation.",
+        "If the rule is genuinely required, route it through change approval with an explicit TTL."
+      ],
+      "source_event_id": "E0002",
+      "resource_id": "sg-0a91f7c2-payments-app",
+      "actor_trust_score": 0.55
+    },
+    {
+      "drift_id": "drift-evt-00005",
+      "type": "standalone",
+      "timestamp": "2026-03-14T03:20:02Z",
+      "control_id": "CTRL-EP-001",
+      "system": "EDR",
+      "domain": "endpoint",
+      "parameter": "agent_active",
+      "baseline_value": true,
+      "current_value": false,
+      "changed_by": "unknown-svc-key",
+      "change_source": "unknown",
+      "approval_status": "none",
+      "status": "Fail",
+      "severity": "CRITICAL",
+      "drift_score": 12.0,
+      "suppressed": false,
+      "suppression_reason": null,
+      "compliance_mappings": {
+        "nist_800_53": "SI-4",
+        "nist_800_53_title": "Information System Monitoring",
+        "cis_benchmark": "NIST-800-53-SI-4",
+        "mitre_technique": "T1562.001",
+        "mitre_technique_name": "Disable or Modify Tools",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-14T03:20:02Z, agent_active on EDR (CrowdStrike) was changed from True to False by svc-key-7734 (unattributed) (unknown) via AgentTamperEvent, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1562.001 (Disable or Modify Tools). Maps to NIST 800-53 SI-4. Classified as CRITICAL severity (pattern: ENDPOINT_PROTECTION_DISABLED, score: 12.0).",
+      "remediation_steps": [
+        "Verify the EDR/endpoint agent is running (not just 'installed') and restore protection.",
+        "Isolate the affected host if compromise indicators are present.",
+        "Investigate the tamper event's process tree and origin."
+      ],
+      "source_event_id": "E0003",
+      "resource_id": "host/payments-app-03.prod",
+      "actor_trust_score": 0.27
+    },
+    {
+      "drift_id": "drift-evt-00006",
+      "type": "standalone",
+      "timestamp": "2026-03-14T03:32:19Z",
+      "control_id": "CTRL-AWS-008",
+      "system": "RDS",
+      "domain": "encryption",
+      "parameter": "storage_encrypted",
+      "baseline_value": true,
+      "current_value": false,
+      "changed_by": "eng-014",
+      "change_source": "human",
+      "approval_status": "none",
+      "status": "Fail",
+      "severity": "CRITICAL",
+      "drift_score": 12.0,
+      "suppressed": false,
+      "suppression_reason": null,
+      "compliance_mappings": {
+        "nist_800_53": "SC-28",
+        "nist_800_53_title": "Protection of Information at Rest",
+        "cis_benchmark": "CIS-AWS-2.3.2",
+        "mitre_technique": "T1486",
+        "mitre_technique_name": "Data Encrypted for Impact",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-14T03:32:19Z, storage_encrypted on RDS (AWS) was changed from True to False by R. Menon (human) via ModifyDBInstance, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1486 (Data Encrypted for Impact). Maps to NIST 800-53 SC-28. Classified as CRITICAL severity (pattern: ENCRYPTION_DOWNGRADED, score: 12.0).",
+      "remediation_steps": [
+        "Restore encryption to the baseline standard (e.g. AES-256 / SSE-KMS) immediately.",
+        "Identify what data was exposed at the weaker encryption level and for how long.",
+        "Audit the change pipeline/actor that introduced the downgrade to prevent recurrence."
+      ],
+      "source_event_id": "E0004",
+      "resource_id": "arn:aws:rds:us-east-1:184920331:db:payments-primary",
+      "actor_trust_score": 0.51
+    },
+    {
+      "drift_id": "drift-evt-00007",
+      "type": "standalone",
+      "timestamp": "2026-03-14T03:41:05Z",
+      "control_id": "CTRL-AWS-005",
+      "system": "IAM",
+      "domain": "identity",
+      "parameter": "mfa_required",
+      "baseline_value": true,
+      "current_value": false,
+      "changed_by": "eng-014",
+      "change_source": "human",
+      "approval_status": "none",
+      "status": "Fail",
+      "severity": "CRITICAL",
+      "drift_score": 12.0,
+      "suppressed": false,
+      "suppression_reason": null,
+      "compliance_mappings": {
+        "nist_800_53": "IA-2",
+        "nist_800_53_title": "Identification and Authentication",
+        "cis_benchmark": "CIS-AWS-1.5",
+        "mitre_technique": "T1556",
+        "mitre_technique_name": "Modify Authentication Process",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-14T03:41:05Z, mfa_required on IAM (AWS) was changed from True to False by R. Menon (human) via DeactivateMFADevice, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1556 (Modify Authentication Process). Maps to NIST 800-53 IA-2. Classified as CRITICAL severity (pattern: MFA_OR_AUTH_WEAKENED, score: 12.0).",
+      "remediation_steps": [
+        "Re-enforce MFA / step-up authentication on the affected identity or policy immediately.",
+        "Review recent authentication events for the affected account for signs of misuse.",
+        "Rotate credentials for the affected identity as a precaution."
+      ],
+      "source_event_id": "E0005",
+      "resource_id": "iam-user/eng-014",
+      "actor_trust_score": 0.48
+    },
+    {
+      "drift_id": "drift-evt-00008",
+      "type": "standalone",
+      "timestamp": "2026-03-22T14:03:00Z",
+      "control_id": "CTRL-GCP-002",
+      "system": "Cloud Storage",
+      "domain": "encryption",
+      "parameter": "public_access_prevention",
+      "baseline_value": "enforced",
+      "current_value": "inherited",
+      "changed_by": "contractor-009",
+      "change_source": "human",
+      "approval_status": "none",
+      "status": "Fail",
+      "severity": "HIGH",
+      "drift_score": 10.5,
+      "suppressed": false,
+      "suppression_reason": null,
+      "compliance_mappings": {
+        "nist_800_53": "AC-3",
+        "nist_800_53_title": "Access Enforcement",
+        "cis_benchmark": "CIS-GCP-5.1",
+        "mitre_technique": "T1530",
+        "mitre_technique_name": "Data from Cloud Storage",
+        "gdpr_article": "Article 25"
+      },
+      "narrative": "At 2026-03-22T14:03:00Z, public_access_prevention on Cloud Storage (GCP) was changed from enforced to inherited by K. Osei (Contractor) (human) via UpdateBucketIAM, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1530 (Data from Cloud Storage). Maps to NIST 800-53 AC-3. Classified as HIGH severity (pattern: ACCESS_CONTROL_WEAKENED, score: 10.5).",
+      "remediation_steps": [
+        "Restore restrictive access settings (block public access / least privilege) immediately.",
+        "Audit who/what accessed the resource while access controls were weakened.",
+        "Add automated drift-prevention (SCP/Policy-as-Code) to block recurrence."
+      ],
+      "source_event_id": "E0007",
+      "resource_id": "gs://sentineldna-prod-analytics",
+      "actor_trust_score": 0.68
+    },
+    {
+      "drift_id": "drift-evt-00009",
+      "type": "standalone",
+      "timestamp": "2026-03-22T18:15:00Z",
+      "control_id": "CTRL-FW-001",
+      "system": "Firewall",
+      "domain": "network",
+      "parameter": "port_443_allow_scoped",
+      "baseline_value": null,
+      "current_value": true,
+      "changed_by": "eng-027",
+      "change_source": "human",
+      "approval_status": "pending",
+      "status": "Degraded",
+      "severity": "MEDIUM",
+      "drift_score": 4.5,
+      "suppressed": false,
+      "suppression_reason": "Event flagged maintenance_window_active=True but no valid, approved maintenance window was found \u2014 treated as unsuppressed.",
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "NIST-800-53-SC-7",
+        "mitre_technique": "T1190",
+        "mitre_technique_name": "Exploit Public-Facing Application",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-22T18:15:00Z, port_443_allow_scoped on Firewall (PaloAlto) was changed from False to True by A. Fernandes (human) via AddRule, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1190 (Exploit Public-Facing Application). Maps to NIST 800-53 SC-7. Classified as MEDIUM severity (pattern: UNKNOWN_PATTERN, score: 4.5).",
+      "remediation_steps": [
+        "Manually review this change \u2014 it does not match a known drift pattern.",
+        "Consider adding a new rule to the Rule Engine if this recurs."
+      ],
+      "source_event_id": "E0043",
+      "resource_id": "fw-edge-01/rule-base/inbound",
+      "actor_trust_score": 0.93
+    },
+    {
+      "drift_id": "drift-evt-00010",
+      "type": "standalone",
+      "timestamp": "2026-03-25T00:57:00Z",
+      "control_id": "CTRL-FW-001",
+      "system": "Firewall",
+      "domain": "network",
+      "parameter": "port_443_allow_scoped",
+      "baseline_value": null,
+      "current_value": true,
+      "changed_by": "eng-027",
+      "change_source": "human",
+      "approval_status": "pending",
+      "status": "Degraded",
+      "severity": "MEDIUM",
+      "drift_score": 4.5,
+      "suppressed": false,
+      "suppression_reason": "Event flagged maintenance_window_active=True but no valid, approved maintenance window was found \u2014 treated as unsuppressed.",
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "NIST-800-53-SC-7",
+        "mitre_technique": "T1190",
+        "mitre_technique_name": "Exploit Public-Facing Application",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-25T00:57:00Z, port_443_allow_scoped on Firewall (PaloAlto) was changed from False to True by A. Fernandes (human) via AddRule, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1190 (Exploit Public-Facing Application). Maps to NIST 800-53 SC-7. Classified as MEDIUM severity (pattern: UNKNOWN_PATTERN, score: 4.5).",
+      "remediation_steps": [
+        "Manually review this change \u2014 it does not match a known drift pattern.",
+        "Consider adding a new rule to the Rule Engine if this recurs."
+      ],
+      "source_event_id": "E0036",
+      "resource_id": "fw-edge-01/rule-base/inbound",
+      "actor_trust_score": 0.95
+    },
+    {
+      "drift_id": "drift-evt-00011",
+      "type": "standalone",
+      "timestamp": "2026-03-26T02:29:00Z",
+      "control_id": "CTRL-FW-001",
+      "system": "Firewall",
+      "domain": "network",
+      "parameter": "port_443_allow_scoped",
+      "baseline_value": null,
+      "current_value": true,
+      "changed_by": "eng-027",
+      "change_source": "human",
+      "approval_status": "pending",
+      "status": "Degraded",
+      "severity": "MEDIUM",
+      "drift_score": 4.5,
+      "suppressed": false,
+      "suppression_reason": "Event flagged maintenance_window_active=True but no valid, approved maintenance window was found \u2014 treated as unsuppressed.",
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "NIST-800-53-SC-7",
+        "mitre_technique": "T1190",
+        "mitre_technique_name": "Exploit Public-Facing Application",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-26T02:29:00Z, port_443_allow_scoped on Firewall (PaloAlto) was changed from False to True by A. Fernandes (human) via AddRule, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1190 (Exploit Public-Facing Application). Maps to NIST 800-53 SC-7. Classified as MEDIUM severity (pattern: UNKNOWN_PATTERN, score: 4.5).",
+      "remediation_steps": [
+        "Manually review this change \u2014 it does not match a known drift pattern.",
+        "Consider adding a new rule to the Rule Engine if this recurs."
+      ],
+      "source_event_id": "E0027",
+      "resource_id": "fw-edge-01/rule-base/inbound",
+      "actor_trust_score": 0.95
+    },
+    {
+      "drift_id": "drift-evt-00012",
+      "type": "standalone",
+      "timestamp": "2026-03-28T00:55:00Z",
+      "control_id": "CTRL-FW-001",
+      "system": "Firewall",
+      "domain": "network",
+      "parameter": "port_443_allow_scoped",
+      "baseline_value": null,
+      "current_value": true,
+      "changed_by": "eng-027",
+      "change_source": "human",
+      "approval_status": "pending",
+      "status": "Degraded",
+      "severity": "MEDIUM",
+      "drift_score": 4.5,
+      "suppressed": false,
+      "suppression_reason": "Event flagged maintenance_window_active=True but no valid, approved maintenance window was found \u2014 treated as unsuppressed.",
+      "compliance_mappings": {
+        "nist_800_53": "SC-7",
+        "nist_800_53_title": "Boundary Protection",
+        "cis_benchmark": "NIST-800-53-SC-7",
+        "mitre_technique": "T1190",
+        "mitre_technique_name": "Exploit Public-Facing Application",
+        "gdpr_article": "Article 32"
+      },
+      "narrative": "At 2026-03-28T00:55:00Z, port_443_allow_scoped on Firewall (PaloAlto) was changed from False to True by A. Fernandes (human) via AddRule, outside any approved maintenance window. This aligns with MITRE ATT&CK technique T1190 (Exploit Public-Facing Application). Maps to NIST 800-53 SC-7. Classified as MEDIUM severity (pattern: UNKNOWN_PATTERN, score: 4.5).",
+      "remediation_steps": [
+        "Manually review this change \u2014 it does not match a known drift pattern.",
+        "Consider adding a new rule to the Rule Engine if this recurs."
+      ],
+      "source_event_id": "E0042",
+      "resource_id": "fw-edge-01/rule-base/inbound",
+      "actor_trust_score": 0.96
+    }
+  ]
+}
