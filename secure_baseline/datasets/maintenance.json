@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "SentinelDNA TTL Contract Simulator",
+  "description": "Temporary-change (TTL) contracts: start/expiry/owner/approver per control. Includes clean closures, one active long-running window, and two deliberately invalid windows (unapproved, expired-unreverted, retroactive) to exercise Stage 2 TTL escalation logic.",
+  "window_count": 8,
+  "windows": [
+    {
+      "maintenance_id": "MW-1001",
+      "control_id": "CTRL-AWS-003",
+      "resource_id": "sg-0a91f7c2-payments-app",
+      "requested_by": "eng-027",
+      "approved_by": "eng-041",
+      "start_time": "2026-03-05T10:00:00Z",
+      "expiry_time": "2026-03-05T14:00:00Z",
+      "reason": "Temporary port 443 opening for load-test harness",
+      "status": "closed",
+      "ticket_ref": "JIRA-SEC-4021"
+    },
+    {
+      "maintenance_id": "MW-1002",
+      "control_id": "CTRL-AWS-006",
+      "resource_id": "kms/cmk-payments-01",
+      "requested_by": "eng-041",
+      "approved_by": "eng-014",
+      "start_time": "2026-03-08T09:00:00Z",
+      "expiry_time": "2026-03-08T11:00:00Z",
+      "reason": "Manual key rotation test ahead of automation rollout",
+      "status": "closed",
+      "ticket_ref": "JIRA-SEC-4055"
+    },
+    {
+      "maintenance_id": "MW-1003",
+      "control_id": "CTRL-AZ-002",
+      "resource_id": "/subscriptions/az-sub-4471/storageAccounts/sentinelprodblob",
+      "requested_by": "eng-027",
+      "approved_by": "eng-041",
+      "start_time": "2026-03-11T08:00:00Z",
+      "expiry_time": "2026-03-11T09:30:00Z",
+      "reason": "Secure-transfer toggle validation for reporting pipeline migration",
+      "status": "closed",
+      "ticket_ref": "JIRA-SEC-4090"
+    },
+    {
+      "maintenance_id": "MW-1004",
+      "control_id": "CTRL-GCP-002",
+      "resource_id": "gs://sentineldna-prod-analytics",
+      "requested_by": "contractor-009",
+      "approved_by": null,
+      "start_time": "2026-03-22T14:00:00Z",
+      "expiry_time": "2026-03-22T14:30:00Z",
+      "reason": "Ad-hoc debugging of reporting job (no approval on file)",
+      "status": "expired_unreverted",
+      "ticket_ref": null,
+      "escalation_note": "Window requested without an approver and expired while bucket was still public; reverted manually 74 minutes after expiry. Feeds Stage 2 TTL-breach detection."
+    },
+    {
+      "maintenance_id": "MW-1005",
+      "control_id": "CTRL-AWS-001",
+      "resource_id": "arn:aws:cloudtrail:us-east-1:184920331:trail/org-main-trail",
+      "requested_by": "eng-014",
+      "approved_by": null,
+      "start_time": "2026-03-14T02:45:00Z",
+      "expiry_time": "2026-03-14T03:15:00Z",
+      "reason": "Claimed 'log pipeline maintenance' (retroactively logged, no prior approval)",
+      "status": "invalid_retroactive",
+      "ticket_ref": null,
+      "escalation_note": "No approver on record and window was logged after the fact. Does not satisfy TTL contract requirements; Case 1 CloudTrail event is NOT covered by a valid maintenance window."
+    },
+    {
+      "maintenance_id": "MW-1006",
+      "control_id": "CTRL-CICD-002",
+      "resource_id": "jenkins/prod-deploy-pipeline",
+      "requested_by": "eng-041",
+      "approved_by": "eng-027",
+      "start_time": "2026-03-27T09:00:00Z",
+      "expiry_time": "2026-03-27T17:00:00Z",
+      "reason": "Service account migration to short-lived OIDC credentials",
+      "status": "closed",
+      "ticket_ref": "JIRA-SEC-4132"
+    },
+    {
+      "maintenance_id": "MW-1007",
+      "control_id": "CTRL-EP-001",
+      "resource_id": "crowdstrike/policy/prod-fleet",
+      "requested_by": "eng-041",
+      "approved_by": "eng-014",
+      "start_time": "2026-04-02T09:00:00Z",
+      "expiry_time": "2026-04-02T10:00:00Z",
+      "reason": "Heartbeat threshold tuning after fleet expansion",
+      "status": "closed",
+      "ticket_ref": "JIRA-SEC-4188"
+    },
+    {
+      "maintenance_id": "MW-1008",
+      "control_id": "CTRL-AWS-007",
+      "resource_id": "vpc-0f3c9e21-prod",
+      "requested_by": "pipeline-ci-main",
+      "approved_by": "eng-027",
+      "start_time": "2026-04-05T00:00:00Z",
+      "expiry_time": "2026-04-12T00:00:00Z",
+      "reason": "Extended flow-log destination migration to new CloudWatch group",
+      "status": "active",
+      "ticket_ref": "JIRA-SEC-4210"
+    }
+  ]
+}

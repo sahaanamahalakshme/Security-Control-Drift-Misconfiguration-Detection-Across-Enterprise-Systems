@@ -1,0 +1,352 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "SentinelDNA Stage0 Ontology Simulator",
+  "description": "Expected-state security control baseline across multi-domain sources, grounded in CIS AWS/Azure/GCP Foundations Benchmarks and NIST 800-53.",
+  "control_count": 19,
+  "controls": [
+    {
+      "control_id": "CTRL-AWS-001",
+      "provider": "AWS",
+      "service": "CloudTrail",
+      "control_name": "Multi-region trail enabled with read/write management events",
+      "universal_category": "AUDIT_LOGGING",
+      "resource_id": "arn:aws:cloudtrail:us-east-1:184920331:trail/org-main-trail",
+      "expected_state": {
+        "enabled": true,
+        "multi_region": true,
+        "log_file_validation": true,
+        "kms_encrypted": true
+      },
+      "compliance_mapping": [
+        "CIS-AWS-3.1",
+        "CIS-AWS-3.2",
+        "PCI-DSS-10.2"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-AWS-002",
+      "provider": "AWS",
+      "service": "S3",
+      "control_name": "S3 bucket default encryption using KMS CMK",
+      "universal_category": "DATA_ENCRYPTION_AT_REST",
+      "resource_id": "arn:aws:s3:::sentineldna-prod-payments",
+      "expected_state": {
+        "encryption": "SSE-KMS",
+        "key_id": "kms/cmk-payments-01",
+        "block_public_access": true
+      },
+      "compliance_mapping": [
+        "CIS-AWS-2.1.1",
+        "PCI-DSS-3.4"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-AWS-003",
+      "provider": "AWS",
+      "service": "EC2-SecurityGroup",
+      "control_name": "No security group allows unrestricted ingress on admin ports",
+      "universal_category": "NETWORK_PERIMETER_CONTROL",
+      "resource_id": "sg-0a91f7c2-payments-app",
+      "expected_state": {
+        "port_22_open_to_world": false,
+        "port_3389_open_to_world": false,
+        "port_8080_open_to_world": false
+      },
+      "compliance_mapping": [
+        "CIS-AWS-5.2",
+        "CIS-AWS-5.3"
+      ],
+      "owner_team": "network-eng",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-AWS-004",
+      "provider": "AWS",
+      "service": "IAM",
+      "control_name": "IAM access keys rotated within 90 days",
+      "universal_category": "CREDENTIAL_HYGIENE",
+      "resource_id": "iam-policy/access-key-rotation",
+      "expected_state": {
+        "max_key_age_days": 90
+      },
+      "compliance_mapping": [
+        "CIS-AWS-1.14"
+      ],
+      "owner_team": "identity-team",
+      "criticality": "MEDIUM"
+    },
+    {
+      "control_id": "CTRL-AWS-005",
+      "provider": "AWS",
+      "service": "IAM",
+      "control_name": "MFA enforced for all human console users",
+      "universal_category": "IDENTITY_ASSURANCE",
+      "resource_id": "iam-policy/mfa-enforcement",
+      "expected_state": {
+        "mfa_required": true,
+        "hardware_mfa_for_root": true
+      },
+      "compliance_mapping": [
+        "CIS-AWS-1.5",
+        "CIS-AWS-1.6"
+      ],
+      "owner_team": "identity-team",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-AWS-006",
+      "provider": "AWS",
+      "service": "KMS",
+      "control_name": "Customer-managed KMS key rotation enabled",
+      "universal_category": "KEY_MANAGEMENT",
+      "resource_id": "kms/cmk-payments-01",
+      "expected_state": {
+        "rotation_enabled": true,
+        "rotation_period_days": 365
+      },
+      "compliance_mapping": [
+        "CIS-AWS-3.8"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "HIGH"
+    },
+    {
+      "control_id": "CTRL-AWS-007",
+      "provider": "AWS",
+      "service": "VPC",
+      "control_name": "VPC Flow Logs enabled on all VPCs",
+      "universal_category": "NETWORK_TRAFFIC_VISIBILITY",
+      "resource_id": "vpc-0f3c9e21-prod",
+      "expected_state": {
+        "flow_logs_enabled": true,
+        "destination": "cloudwatch"
+      },
+      "compliance_mapping": [
+        "CIS-AWS-2.9"
+      ],
+      "owner_team": "network-eng",
+      "criticality": "MEDIUM"
+    },
+    {
+      "control_id": "CTRL-AWS-008",
+      "provider": "AWS",
+      "service": "RDS",
+      "control_name": "RDS instances encrypted at rest, not publicly accessible",
+      "universal_category": "DATA_ENCRYPTION_AT_REST",
+      "resource_id": "arn:aws:rds:us-east-1:184920331:db:payments-primary",
+      "expected_state": {
+        "storage_encrypted": true,
+        "publicly_accessible": false
+      },
+      "compliance_mapping": [
+        "CIS-AWS-2.3.1",
+        "CIS-AWS-2.3.2"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-AZ-001",
+      "provider": "Azure",
+      "service": "Diagnostic Logs",
+      "control_name": "Activity Log diagnostic setting exports to Log Analytics",
+      "universal_category": "AUDIT_LOGGING",
+      "resource_id": "/subscriptions/az-sub-4471/diagnosticSettings/org-activity-export",
+      "expected_state": {
+        "enabled": true,
+        "retention_days": 365,
+        "categories": [
+          "Administrative",
+          "Security"
+        ]
+      },
+      "compliance_mapping": [
+        "CIS-AZURE-5.1.1"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-AZ-002",
+      "provider": "Azure",
+      "service": "Storage Account",
+      "control_name": "Storage account requires secure transfer and disallows public blob access",
+      "universal_category": "DATA_ENCRYPTION_AT_REST",
+      "resource_id": "/subscriptions/az-sub-4471/storageAccounts/sentinelprodblob",
+      "expected_state": {
+        "secure_transfer_required": true,
+        "allow_blob_public_access": false
+      },
+      "compliance_mapping": [
+        "CIS-AZURE-3.1",
+        "CIS-AZURE-3.7"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "HIGH"
+    },
+    {
+      "control_id": "CTRL-AZ-003",
+      "provider": "Azure",
+      "service": "NSG",
+      "control_name": "Network Security Group blocks RDP/SSH from Internet",
+      "universal_category": "NETWORK_PERIMETER_CONTROL",
+      "resource_id": "/subscriptions/az-sub-4471/networkSecurityGroups/nsg-app-tier",
+      "expected_state": {
+        "port_3389_open_to_world": false,
+        "port_22_open_to_world": false
+      },
+      "compliance_mapping": [
+        "CIS-AZURE-6.2",
+        "CIS-AZURE-6.3"
+      ],
+      "owner_team": "network-eng",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-GCP-001",
+      "provider": "GCP",
+      "service": "Audit Logging",
+      "control_name": "Data Access audit logs enabled for all services",
+      "universal_category": "AUDIT_LOGGING",
+      "resource_id": "projects/sentineldna-prod/auditConfigs/default",
+      "expected_state": {
+        "enabled": true,
+        "log_types": [
+          "ADMIN_READ",
+          "DATA_WRITE",
+          "DATA_READ"
+        ]
+      },
+      "compliance_mapping": [
+        "CIS-GCP-2.1"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "HIGH"
+    },
+    {
+      "control_id": "CTRL-GCP-002",
+      "provider": "GCP",
+      "service": "Cloud Storage",
+      "control_name": "Cloud Storage buckets not publicly readable/writable",
+      "universal_category": "DATA_ENCRYPTION_AT_REST",
+      "resource_id": "gs://sentineldna-prod-analytics",
+      "expected_state": {
+        "public_access_prevention": "enforced",
+        "uniform_bucket_level_access": true
+      },
+      "compliance_mapping": [
+        "CIS-GCP-5.1"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "HIGH"
+    },
+    {
+      "control_id": "CTRL-FW-001",
+      "provider": "PaloAlto",
+      "service": "Firewall",
+      "control_name": "Perimeter firewall denies inbound traffic on port 8080 from any-any",
+      "universal_category": "NETWORK_PERIMETER_CONTROL",
+      "resource_id": "fw-edge-01/rule-base/inbound",
+      "expected_state": {
+        "port_8080_allow_any": false,
+        "port_4444_allow_any": false
+      },
+      "compliance_mapping": [
+        "NIST-800-53-SC-7"
+      ],
+      "owner_team": "network-eng",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-FW-002",
+      "provider": "pfSense",
+      "service": "Firewall",
+      "control_name": "Egress filtering restricts outbound traffic to approved destinations",
+      "universal_category": "NETWORK_PERIMETER_CONTROL",
+      "resource_id": "fw-edge-02/rule-base/outbound",
+      "expected_state": {
+        "default_outbound_policy": "deny",
+        "approved_destinations_only": true
+      },
+      "compliance_mapping": [
+        "NIST-800-53-SC-7"
+      ],
+      "owner_team": "network-eng",
+      "criticality": "HIGH"
+    },
+    {
+      "control_id": "CTRL-IAM-001",
+      "provider": "Okta",
+      "service": "IdP",
+      "control_name": "Privileged admin roles require step-up MFA on every session",
+      "universal_category": "IDENTITY_ASSURANCE",
+      "resource_id": "okta/policy/priv-admin-stepup",
+      "expected_state": {
+        "step_up_required": true,
+        "session_lifetime_minutes": 60
+      },
+      "compliance_mapping": [
+        "NIST-800-53-IA-2"
+      ],
+      "owner_team": "identity-team",
+      "criticality": "CRITICAL"
+    },
+    {
+      "control_id": "CTRL-EP-001",
+      "provider": "CrowdStrike",
+      "service": "EDR",
+      "control_name": "EDR agent active and reporting heartbeat on all production endpoints",
+      "universal_category": "ENDPOINT_HEALTH",
+      "resource_id": "crowdstrike/policy/prod-fleet",
+      "expected_state": {
+        "agent_active": true,
+        "max_heartbeat_gap_minutes": 15,
+        "tamper_protection": true
+      },
+      "compliance_mapping": [
+        "NIST-800-53-SI-4"
+      ],
+      "owner_team": "endpoint-security",
+      "criticality": "HIGH"
+    },
+    {
+      "control_id": "CTRL-CICD-001",
+      "provider": "GitHubActions",
+      "service": "CI/CD",
+      "control_name": "Production deploy workflows require signed commits and branch protection",
+      "universal_category": "SUPPLY_CHAIN_INTEGRITY",
+      "resource_id": "github/org/sentinel-dna/branch-protection/main",
+      "expected_state": {
+        "signed_commits_required": true,
+        "required_reviews": 2,
+        "force_push_blocked": true
+      },
+      "compliance_mapping": [
+        "NIST-800-53-CM-3"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "HIGH"
+    },
+    {
+      "control_id": "CTRL-CICD-002",
+      "provider": "Jenkins",
+      "service": "CI/CD",
+      "control_name": "Build agents run with least-privilege service account, no static prod credentials",
+      "universal_category": "SUPPLY_CHAIN_INTEGRITY",
+      "resource_id": "jenkins/prod-deploy-pipeline",
+      "expected_state": {
+        "static_prod_creds_present": false,
+        "credential_type": "short_lived_oidc"
+      },
+      "compliance_mapping": [
+        "NIST-800-53-AC-6"
+      ],
+      "owner_team": "platform-security",
+      "criticality": "HIGH"
+    }
+  ]
+}
