@@ -1,0 +1,329 @@
+{
+  "schema_version": "1.0",
+  "generated_by": "SentinelDNA Infrastructure Topology Simulator",
+  "description": "Infrastructure relationship graph feeding Stage 4 (Attack Graph Correlation). Node ids match resource_id values in baseline.json/events.json/maintenance.json so all datasets join without remapping. Wired to make the Case-1 incident path in events.json (firewall -> security group -> app host -> database -> backup bucket) traceable end-to-end, so exploit-path discovery reflects real reachability rather than time-window correlation.",
+  "node_count": 17,
+  "edge_count": 18,
+  "nodes": [
+    {
+      "id": "INTERNET",
+      "type": "external_zone",
+      "provider": null,
+      "environment": null,
+      "criticality": null,
+      "exposed_to_internet": true,
+      "business_tag": null
+    },
+    {
+      "id": "fw-edge-01",
+      "type": "firewall",
+      "provider": "PaloAlto",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": true,
+      "business_tag": "perimeter_defense"
+    },
+    {
+      "id": "fw-edge-02",
+      "type": "firewall",
+      "provider": "pfSense",
+      "environment": "prod",
+      "criticality": "HIGH",
+      "exposed_to_internet": true,
+      "business_tag": "perimeter_defense"
+    },
+    {
+      "id": "vpc-0f3c9e21-prod",
+      "type": "vpc",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "HIGH",
+      "exposed_to_internet": false,
+      "business_tag": "network_boundary"
+    },
+    {
+      "id": "sg-0a91f7c2-payments-app",
+      "type": "security_group",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": "payments_perimeter"
+    },
+    {
+      "id": "host/payments-app-03.prod",
+      "type": "server",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": "payments_processing"
+    },
+    {
+      "id": "host/payments-app-01.prod",
+      "type": "server",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": "payments_processing"
+    },
+    {
+      "id": "arn:aws:rds:us-east-1:184920331:db:payments-primary",
+      "type": "database",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": "payments_data_store"
+    },
+    {
+      "id": "arn:aws:s3:::sentineldna-prod-payments",
+      "type": "storage_bucket",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": "payments_backup"
+    },
+    {
+      "id": "gs://sentineldna-prod-analytics",
+      "type": "storage_bucket",
+      "provider": "GCP",
+      "environment": "prod",
+      "criticality": "MEDIUM",
+      "exposed_to_internet": false,
+      "business_tag": "analytics_data"
+    },
+    {
+      "id": "kms/cmk-payments-01",
+      "type": "kms_key",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": "encryption_control"
+    },
+    {
+      "id": "arn:aws:cloudtrail:us-east-1:184920331:trail/org-main-trail",
+      "type": "logging_service",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": "audit_visibility"
+    },
+    {
+      "id": "crowdstrike/policy/prod-fleet",
+      "type": "edr_agent",
+      "provider": "CrowdStrike",
+      "environment": "prod",
+      "criticality": "HIGH",
+      "exposed_to_internet": false,
+      "business_tag": "endpoint_defense"
+    },
+    {
+      "id": "iam-user/eng-014",
+      "type": "iam_identity",
+      "provider": "AWS",
+      "environment": "prod",
+      "criticality": "HIGH",
+      "exposed_to_internet": false,
+      "business_tag": null
+    },
+    {
+      "id": "okta/policy/priv-admin-stepup",
+      "type": "identity_policy",
+      "provider": "Okta",
+      "environment": "prod",
+      "criticality": "CRITICAL",
+      "exposed_to_internet": false,
+      "business_tag": null
+    },
+    {
+      "id": "github/org/sentinel-dna/branch-protection/main",
+      "type": "ci_cd_pipeline",
+      "provider": "GitHubActions",
+      "environment": "prod",
+      "criticality": "HIGH",
+      "exposed_to_internet": false,
+      "business_tag": "deployment_path"
+    },
+    {
+      "id": "jenkins/prod-deploy-pipeline",
+      "type": "ci_cd_pipeline",
+      "provider": "Jenkins",
+      "environment": "prod",
+      "criticality": "HIGH",
+      "exposed_to_internet": false,
+      "business_tag": "deployment_path"
+    }
+  ],
+  "edges": [
+    {
+      "from": "INTERNET",
+      "to": "fw-edge-01",
+      "relationship": "routes_to",
+      "mitre_technique": "T1190",
+      "exploit_probability": 0.15,
+      "compliance_impact": "PCI-DSS-1.2",
+      "business_impact": "LOW"
+    },
+    {
+      "from": "fw-edge-01",
+      "to": "vpc-0f3c9e21-prod",
+      "relationship": "protects",
+      "mitre_technique": "T1190",
+      "exploit_probability": 0.1,
+      "compliance_impact": "PCI-DSS-1.2",
+      "business_impact": "MEDIUM"
+    },
+    {
+      "from": "vpc-0f3c9e21-prod",
+      "to": "sg-0a91f7c2-payments-app",
+      "relationship": "contains",
+      "mitre_technique": null,
+      "exploit_probability": 0.05,
+      "compliance_impact": null,
+      "business_impact": "LOW"
+    },
+    {
+      "from": "sg-0a91f7c2-payments-app",
+      "to": "host/payments-app-03.prod",
+      "relationship": "protects",
+      "mitre_technique": "T1190",
+      "exploit_probability": 0.62,
+      "compliance_impact": "CIS-AWS-5.2",
+      "business_impact": "CRITICAL",
+      "notes": "When port 8080 is opened to 0.0.0.0/0 (see event E0002), exploit_probability rises sharply."
+    },
+    {
+      "from": "sg-0a91f7c2-payments-app",
+      "to": "host/payments-app-01.prod",
+      "relationship": "protects",
+      "mitre_technique": "T1190",
+      "exploit_probability": 0.2,
+      "compliance_impact": "CIS-AWS-5.2",
+      "business_impact": "HIGH"
+    },
+    {
+      "from": "host/payments-app-03.prod",
+      "to": "arn:aws:rds:us-east-1:184920331:db:payments-primary",
+      "relationship": "connects",
+      "mitre_technique": "T1210",
+      "exploit_probability": 0.55,
+      "compliance_impact": "PCI-DSS-6.2",
+      "business_impact": "CRITICAL",
+      "notes": "Direct app-to-database connection; primary path from compromised host to payment data."
+    },
+    {
+      "from": "arn:aws:rds:us-east-1:184920331:db:payments-primary",
+      "to": "arn:aws:s3:::sentineldna-prod-payments",
+      "relationship": "backs_up_to",
+      "mitre_technique": "T1530",
+      "exploit_probability": 0.3,
+      "compliance_impact": "PCI-DSS-3.4",
+      "business_impact": "CRITICAL",
+      "notes": "Automated snapshot export; a compromised DB role can reach backup data here too."
+    },
+    {
+      "from": "crowdstrike/policy/prod-fleet",
+      "to": "host/payments-app-03.prod",
+      "relationship": "monitors",
+      "mitre_technique": "T1562.001",
+      "exploit_probability": 0.25,
+      "compliance_impact": "NIST-800-53-SI-4",
+      "business_impact": "HIGH"
+    },
+    {
+      "from": "crowdstrike/policy/prod-fleet",
+      "to": "host/payments-app-01.prod",
+      "relationship": "monitors",
+      "mitre_technique": "T1562.001",
+      "exploit_probability": 0.1,
+      "compliance_impact": "NIST-800-53-SI-4",
+      "business_impact": "MEDIUM"
+    },
+    {
+      "from": "kms/cmk-payments-01",
+      "to": "arn:aws:rds:us-east-1:184920331:db:payments-primary",
+      "relationship": "encrypts",
+      "mitre_technique": "T1486",
+      "exploit_probability": 0.08,
+      "compliance_impact": "PCI-DSS-3.4",
+      "business_impact": "CRITICAL"
+    },
+    {
+      "from": "kms/cmk-payments-01",
+      "to": "arn:aws:s3:::sentineldna-prod-payments",
+      "relationship": "encrypts",
+      "mitre_technique": "T1486",
+      "exploit_probability": 0.08,
+      "compliance_impact": "PCI-DSS-3.4",
+      "business_impact": "CRITICAL"
+    },
+    {
+      "from": "arn:aws:cloudtrail:us-east-1:184920331:trail/org-main-trail",
+      "to": "vpc-0f3c9e21-prod",
+      "relationship": "monitors",
+      "mitre_technique": "T1562.008",
+      "exploit_probability": 0.2,
+      "compliance_impact": "CIS-AWS-3.1",
+      "business_impact": "HIGH"
+    },
+    {
+      "from": "iam-user/eng-014",
+      "to": "arn:aws:cloudtrail:us-east-1:184920331:trail/org-main-trail",
+      "relationship": "has_write_access_to",
+      "mitre_technique": "T1562.008",
+      "exploit_probability": 0.4,
+      "compliance_impact": "CIS-AWS-1.16",
+      "business_impact": "CRITICAL"
+    },
+    {
+      "from": "iam-user/eng-014",
+      "to": "sg-0a91f7c2-payments-app",
+      "relationship": "has_write_access_to",
+      "mitre_technique": "T1190",
+      "exploit_probability": 0.4,
+      "compliance_impact": "CIS-AWS-1.16",
+      "business_impact": "CRITICAL"
+    },
+    {
+      "from": "iam-user/eng-014",
+      "to": "arn:aws:rds:us-east-1:184920331:db:payments-primary",
+      "relationship": "has_write_access_to",
+      "mitre_technique": "T1078",
+      "exploit_probability": 0.4,
+      "compliance_impact": "CIS-AWS-1.16",
+      "business_impact": "CRITICAL"
+    },
+    {
+      "from": "okta/policy/priv-admin-stepup",
+      "to": "iam-user/eng-014",
+      "relationship": "authenticates",
+      "mitre_technique": "T1556",
+      "exploit_probability": 0.12,
+      "compliance_impact": "NIST-800-53-IA-2",
+      "business_impact": "HIGH"
+    },
+    {
+      "from": "github/org/sentinel-dna/branch-protection/main",
+      "to": "host/payments-app-01.prod",
+      "relationship": "deploys_to",
+      "mitre_technique": "T1195.002",
+      "exploit_probability": 0.12,
+      "compliance_impact": "NIST-800-53-CM-3",
+      "business_impact": "HIGH"
+    },
+    {
+      "from": "jenkins/prod-deploy-pipeline",
+      "to": "host/payments-app-03.prod",
+      "relationship": "deploys_to",
+      "mitre_technique": "T1195.002",
+      "exploit_probability": 0.18,
+      "compliance_impact": "NIST-800-53-AC-6",
+      "business_impact": "HIGH"
+    }
+  ]
+}
