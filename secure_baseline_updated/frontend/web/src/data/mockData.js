@@ -1,4 +1,4 @@
-// Demo datasets mirroring the SentinelDNA mockups. Used whenever the
+// Demo datasets mirroring the Secure Baseline mockups. Used whenever the
 // FastAPI backend is unreachable or hasn't generated data yet, and to
 // power the Normal / Crisis / Optimal scenario switcher for demos.
 
@@ -40,7 +40,7 @@ const BASE_DRIFTS = [
     description: 'Security group allows unrestricted SSH access from 0.0.0.0/0 on port 22.',
     expected: 'SSH restricted to corporate IPs 10.0.0.0/8',
     actual: '0.0.0.0/0:22',
-    detected_by: 'SentinelDNA Drift Detection Engine',
+    detected_by: 'Secure Baseline Drift Detection Engine',
     timestamp: '2026-07-11T10:18:07Z',
     affected_resources: ['sg-0abc123def456ghi7 (prod-web-sg)', 'sg-0def456ghi789jkl0 (bastion-sg)'],
     remediation_steps: [
@@ -59,7 +59,7 @@ const BASE_DRIFTS = [
     description: 'An IAM policy was updated to allow public access to S3 buckets, granting overly broad permissions that could expose sensitive data.',
     expected: 's3:ListBucket, s3:GetObject on arn:aws:s3:::my-bucket/*',
     actual: 's3:* on arn:aws:s3:::* (public)',
-    detected_by: 'SentinelDNA Drift Detection Engine',
+    detected_by: 'Secure Baseline Drift Detection Engine',
     timestamp: '2026-07-11T10:24:31Z',
     affected_resources: ['policy-iam-analytics-role'],
     remediation_steps: ['Review the modified IAM policy diff.', 'Restrict actions to s3:ListBucket and s3:GetObject.', 'Scope resource ARN to the specific bucket.', 'Re-apply least-privilege condition.'],
@@ -73,7 +73,7 @@ const BASE_DRIFTS = [
     description: 'Firewall logging destination was changed from the centralized SIEM to a local storage bucket, which may impact log monitoring and alerting.',
     expected: 'Destination: siem-logs-central · Retention: 365 days',
     actual: 'Destination: s3://local-logs-bucket · Retention: 30 days',
-    detected_by: 'SentinelDNA Drift Detection Engine',
+    detected_by: 'Secure Baseline Drift Detection Engine',
     timestamp: '2026-07-11T10:11:45Z',
     affected_resources: ['fw-edge-01'],
     remediation_steps: ['Restore logging destination to siem-logs-central.', 'Confirm retention policy is reset to 365 days.'],
@@ -87,7 +87,7 @@ const BASE_DRIFTS = [
     description: 'The minimum password length was reduced, which may weaken account security and increase the risk of brute-force attacks.',
     expected: 'Minimum Length: 14 · Symbols required · Expiry: 90 days',
     actual: 'Minimum Length: 8 · Symbols disabled · Expiry: 90 days',
-    detected_by: 'SentinelDNA Drift Detection Engine',
+    detected_by: 'Secure Baseline Drift Detection Engine',
     timestamp: '2026-07-11T10:05:22Z',
     affected_resources: ['iam-account-policy'],
     remediation_steps: ['Restore minimum password length to 14 characters.', 'Re-enable symbol requirement.'],
@@ -101,7 +101,7 @@ const BASE_DRIFTS = [
     description: 'A service principal was granted the Owner role, providing unrestricted permissions across all resources — violating least privilege.',
     expected: 'Role: Contributor · Scope: Resource Group',
     actual: 'Role: Owner · Scope: Subscription',
-    detected_by: 'SentinelDNA Drift Detection Engine',
+    detected_by: 'Secure Baseline Drift Detection Engine',
     timestamp: '2026-07-11T09:58:10Z',
     affected_resources: ['sp-analytics-pipeline'],
     remediation_steps: ['Downgrade service principal role to Contributor.', 'Scope the assignment to the resource group.'],
@@ -115,7 +115,7 @@ const BASE_DRIFTS = [
     description: 'Database security group rule was modified to allow inbound access from a broader CIDR range than approved.',
     expected: 'Port 5432 from 10.0.4.0/24',
     actual: 'Port 5432 from 10.0.0.0/8',
-    detected_by: 'SentinelDNA Drift Detection Engine',
+    detected_by: 'Secure Baseline Drift Detection Engine',
     timestamp: '2026-07-11T09:47:00Z',
     affected_resources: ['sg-0aa11bb22cc33dd44 (rds-sg)'],
     remediation_steps: ['Restrict inbound CIDR to 10.0.4.0/24.'],
@@ -124,9 +124,9 @@ const BASE_DRIFTS = [
 
 const CRISIS_DRIFTS = [
   ...BASE_DRIFTS,
-  { drift_id: 'drift-crisis-01', control_id: 'iam-mfa', control: 'MFA Enforcement', title: 'MFA Enforcement - Root account MFA disabled', severity: 'CRITICAL', description: 'Root account MFA was disabled, exposing the account to credential-based takeover.', expected: 'MFA: Enabled', actual: 'MFA: Disabled', detected_by: 'SentinelDNA Drift Detection Engine', timestamp: '2026-07-11T10:30:00Z', affected_resources: ['root-account'], remediation_steps: ['Re-enable MFA on the root account immediately.'] },
-  { drift_id: 'drift-crisis-02', control_id: 'aws-s3-encryption', control: 'S3 Bucket Encryption', title: 'S3 Bucket Encryption - Encryption disabled on sensitive bucket', severity: 'CRITICAL', description: 'Server-side encryption was disabled on a bucket containing sensitive customer data.', expected: 'SSE-KMS: Enabled', actual: 'SSE-KMS: Disabled', detected_by: 'SentinelDNA Drift Detection Engine', timestamp: '2026-07-11T10:28:00Z', affected_resources: ['sensitive-data-bucket'], remediation_steps: ['Re-enable SSE-KMS encryption.', 'Rotate exposed data encryption keys.'] },
-  { drift_id: 'drift-crisis-03', control_id: 'fw-rules', control: 'Firewall Rules', title: 'Firewall Rules - Default deny rule removed', severity: 'CRITICAL', description: 'The default-deny egress rule was removed, allowing unrestricted outbound traffic.', expected: 'Default: Deny all', actual: 'Default: Allow all', detected_by: 'SentinelDNA Drift Detection Engine', timestamp: '2026-07-11T10:26:00Z', affected_resources: ['fw-edge-01', 'fw-edge-02'], remediation_steps: ['Restore default-deny egress rule.'] },
+  { drift_id: 'drift-crisis-01', control_id: 'iam-mfa', control: 'MFA Enforcement', title: 'MFA Enforcement - Root account MFA disabled', severity: 'CRITICAL', description: 'Root account MFA was disabled, exposing the account to credential-based takeover.', expected: 'MFA: Enabled', actual: 'MFA: Disabled', detected_by: 'Secure Baseline Drift Detection Engine', timestamp: '2026-07-11T10:30:00Z', affected_resources: ['root-account'], remediation_steps: ['Re-enable MFA on the root account immediately.'] },
+  { drift_id: 'drift-crisis-02', control_id: 'aws-s3-encryption', control: 'S3 Bucket Encryption', title: 'S3 Bucket Encryption - Encryption disabled on sensitive bucket', severity: 'CRITICAL', description: 'Server-side encryption was disabled on a bucket containing sensitive customer data.', expected: 'SSE-KMS: Enabled', actual: 'SSE-KMS: Disabled', detected_by: 'Secure Baseline Drift Detection Engine', timestamp: '2026-07-11T10:28:00Z', affected_resources: ['sensitive-data-bucket'], remediation_steps: ['Re-enable SSE-KMS encryption.', 'Rotate exposed data encryption keys.'] },
+  { drift_id: 'drift-crisis-03', control_id: 'fw-rules', control: 'Firewall Rules', title: 'Firewall Rules - Default deny rule removed', severity: 'CRITICAL', description: 'The default-deny egress rule was removed, allowing unrestricted outbound traffic.', expected: 'Default: Deny all', actual: 'Default: Allow all', detected_by: 'Secure Baseline Drift Detection Engine', timestamp: '2026-07-11T10:26:00Z', affected_resources: ['fw-edge-01', 'fw-edge-02'], remediation_steps: ['Restore default-deny egress rule.'] },
 ]
 
 const OPTIMAL_DRIFTS = BASE_DRIFTS.slice(4, 6).map((d) => ({ ...d, severity: 'LOW' }))

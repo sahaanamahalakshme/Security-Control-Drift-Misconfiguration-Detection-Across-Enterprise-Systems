@@ -29,7 +29,7 @@ export default function Sidebar() {
           <ShieldHalf className="w-4 h-4 text-white" />
         </div>
         <div>
-          <div className="font-bold text-[#1A2332] text-sm leading-tight tracking-tight">SentinelDNA</div>
+          <div className="font-bold text-[#1A2332] text-sm leading-tight tracking-tight">Secure Baseline</div>
           <div className="text-[10px] text-[#8B95A1] mt-0.5 leading-none">Security Drift Intelligence</div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-// Thin client over the SentinelDNA FastAPI backend (backend/api/main.py).
+// Thin client over the Secure Baseline FastAPI backend (backend/api/main.py).
 // Base URL is read from VITE_API_BASE_URL (see .env.example). Every method
 // resolves to { data, source: 'live'|'error', error } and never throws,
 // so callers can safely fall back to demo data.

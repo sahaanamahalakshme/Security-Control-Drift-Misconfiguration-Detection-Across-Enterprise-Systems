@@ -96,7 +96,7 @@ export default function DriftDetailPage() {
                     )}
                     <span className="inline-flex items-center gap-1 text-[11px] text-[#8B95A1]">
                       <Clock className="w-3 h-3" />
-                      {drift.detected_by || "SentinelDNA Drift Detection Engine"}
+                      {drift.detected_by || "Secure Baseline Drift Detection Engine"}
                     </span>
                   </div>
                 </div>

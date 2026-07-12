@@ -42,7 +42,7 @@ export function normalizeDrift(d) {
     description: d.description ?? d.details ?? d.narrative ?? '',
     expected: stringifyKV(d.expected ?? d.expected_value ?? d.baseline_value),
     actual: stringifyKV(d.actual ?? d.actual_value ?? d.current_value),
-    detected_by: d.detected_by ?? d.changed_by ?? 'SentinelDNA Drift Detection Engine',
+    detected_by: d.detected_by ?? d.changed_by ?? 'Secure Baseline Drift Detection Engine',
     timestamp: d.timestamp ?? d.detected_at ?? d.created_at ?? null,
     affected_resources: d.affected_resources ?? d.resources ?? (d.resource_id ? [d.resource_id] : []),
     remediation_steps: d.remediation_steps ?? d.remediation ?? [],

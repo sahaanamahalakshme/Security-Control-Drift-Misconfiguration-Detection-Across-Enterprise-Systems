@@ -29,7 +29,7 @@ export default function TimelinePage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `sentineldna-drift-timeline-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `secure-baseline-drift-timeline-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }
