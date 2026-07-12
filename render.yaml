@@ -20,7 +20,7 @@ services:
     name: sentineldna-frontend
     runtime: static
     buildCommand: "cd secure_baseline_updated/frontend/web && npm install && npm run build"
-    publishPath: "secure_baseline_updated/frontend/web/dist"
+    publishDir: "secure_baseline_updated/frontend/web/dist"
     envVars:
       - key: VITE_API_BASE_URL
         fromService:
