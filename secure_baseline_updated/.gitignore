@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.spec
+
+# Environments
+.env
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Replit (not needed locally)
+.replit
+replit.nix
+.upm/
+.cache/
+.local/
+
+# Zip / Archives
+*.zip
+*.tar.gz
+
+# Node
+node_modules/

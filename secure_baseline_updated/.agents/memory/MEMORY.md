@@ -1,0 +1,2 @@
+- [SentinelDNA backend setup](sentineldna-backend.md) — Python 3.11 module + uvicorn workflow; google-genai blocked but backend degrades gracefully.
+- [SentinelDNA data normalizers](sentineldna-normalizers.md) — field mapping quirks between backend schemas and frontend normalizeDrift/normalizeControl/stringifyKV.
