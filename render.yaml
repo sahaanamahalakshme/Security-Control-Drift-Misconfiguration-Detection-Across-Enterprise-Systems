@@ -2,7 +2,6 @@ services:
   # 1. Backend Web Service (FastAPI)
   - type: web
     name: sentineldna-backend
-    plan: free # Force using Render's Free tier
     runtime: python
     buildCommand: "pip install -r secure_baseline_updated/backend/requirements.txt"
     startCommand: "uvicorn secure_baseline_updated.backend.api.main:app --host 0.0.0.0 --port $PORT"
@@ -19,7 +18,6 @@ services:
   # 2. Frontend Static Site (React + Vite)
   - type: web
     name: sentineldna-frontend
-    plan: free # Force using Render's Free tier
     runtime: static
     buildCommand: "cd secure_baseline_updated/frontend/web && npm install && npm run build"
     staticPublishPath: "secure_baseline_updated/frontend/web/dist"
