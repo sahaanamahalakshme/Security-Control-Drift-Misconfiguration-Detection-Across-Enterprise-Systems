@@ -16,10 +16,11 @@ services:
         sync: false # User will set this in Render UI
 
   # 2. Frontend Static Site (React + Vite)
-  - type: static
+  - type: web
     name: sentineldna-frontend
+    runtime: static
     buildCommand: "cd secure_baseline_updated/frontend/web && npm install && npm run build"
-    publishDir: "secure_baseline_updated/frontend/web/dist"
+    staticPublishPath: "secure_baseline_updated/frontend/web/dist"
     envVars:
       - key: VITE_API_BASE_URL
         fromService:
