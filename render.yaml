@@ -3,8 +3,8 @@ services:
   - type: web
     name: sentineldna-backend
     runtime: python
-    buildCommand: "pip install -r backend/requirements.txt"
-    startCommand: "uvicorn backend.api.main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: "pip install -r secure_baseline_updated/backend/requirements.txt"
+    startCommand: "uvicorn secure_baseline_updated.backend.api.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
@@ -19,8 +19,8 @@ services:
   - type: web
     name: sentineldna-frontend
     runtime: static
-    buildCommand: "cd frontend/web && npm install && npm run build"
-    publishPath: "frontend/web/dist"
+    buildCommand: "cd secure_baseline_updated/frontend/web && npm install && npm run build"
+    publishPath: "secure_baseline_updated/frontend/web/dist"
     envVars:
       - key: VITE_API_BASE_URL
         fromService:
